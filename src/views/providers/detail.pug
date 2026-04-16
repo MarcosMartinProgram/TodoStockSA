@@ -1,0 +1,46 @@
+extends ../layout
+
+block content
+  .top-bar
+    h2 Detalle del Proveedor
+    a.btn.btn-primary(href="/proveedores") Volver al listado
+
+  .card
+    .detail-grid
+      dt ID
+      dd #{proveedor.id}
+      dt Nombre
+      dd #{proveedor.nombre}
+      dt Contacto
+      dd #{proveedor.contacto}
+      dt Teléfono
+      dd #{proveedor.telefono}
+      dt Email
+      dd #{proveedor.email}
+      dt Dirección
+      dd #{proveedor.direccion || 'Sin dirección registrada'}
+
+  h3(style="margin: 20px 0 10px") Productos Asociados
+  if productosAsociados.length === 0
+    .alert.alert-success Este proveedor no tiene productos asociados.
+  else
+    table
+      thead
+        tr
+          th ID
+          th Nombre
+          th Precio
+          th Stock
+      tbody
+        each prod in productosAsociados
+          tr
+            td #{prod.id}
+            td
+              a(href=`/productos/${prod.id}`) #{prod.nombre}
+            td $#{prod.precio.toFixed(2)}
+            td #{prod.stock}
+
+  .actions(style="margin-top: 15px")
+    a.btn.btn-warning(href=`/proveedores/${proveedor.id}/editar`) Editar
+    form.inline(action=`/proveedores/${proveedor.id}?_method=DELETE` method="POST")
+      button.btn.btn-danger(type="submit" onclick="return confirm('¿Está seguro?')") Eliminar

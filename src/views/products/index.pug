@@ -1,0 +1,37 @@
+extends ../layout
+
+block content
+  .top-bar
+    h2 Listado de Productos
+    a.btn.btn-success(href="/productos/crear") + Nuevo Producto
+
+  if productos.length === 0
+    .alert.alert-danger No hay productos registrados.
+  else
+    table
+      thead
+        tr
+          th ID
+          th Nombre
+          th Precio
+          th Stock
+          th Proveedor
+          th Acciones
+      tbody
+        each producto in productos
+          tr
+            td #{producto.id}
+            td #{producto.nombre}
+            td $#{producto.precio.toFixed(2)}
+            td #{producto.stock}
+            td
+              if producto.proveedor
+                | #{producto.proveedor.nombre}
+              else
+                em(style="color:#999") Sin proveedor
+            td
+              .actions
+                a.btn.btn-primary(href=`/productos/${producto.id}`) Ver
+                a.btn.btn-warning(href=`/productos/${producto.id}/editar`) Editar
+                form.inline(action=`/productos/${producto.id}?_method=DELETE` method="POST")
+                  button.btn.btn-danger(type="submit" onclick="return confirm('¿Está seguro de eliminar este producto?')") Eliminar

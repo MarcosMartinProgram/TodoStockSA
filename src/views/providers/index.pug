@@ -1,0 +1,33 @@
+extends ../layout
+
+block content
+  .top-bar
+    h2 Listado de Proveedores
+    a.btn.btn-success(href="/proveedores/crear") + Nuevo Proveedor
+
+  if proveedores.length === 0
+    .alert.alert-danger No hay proveedores registrados.
+  else
+    table
+      thead
+        tr
+          th ID
+          th Nombre
+          th Contacto
+          th Teléfono
+          th Email
+          th Acciones
+      tbody
+        each prov in proveedores
+          tr
+            td #{prov.id}
+            td #{prov.nombre}
+            td #{prov.contacto}
+            td #{prov.telefono}
+            td #{prov.email}
+            td
+              .actions
+                a.btn.btn-primary(href=`/proveedores/${prov.id}`) Ver
+                a.btn.btn-warning(href=`/proveedores/${prov.id}/editar`) Editar
+                form.inline(action=`/proveedores/${prov.id}?_method=DELETE` method="POST")
+                  button.btn.btn-danger(type="submit" onclick="return confirm('¿Está seguro de eliminar este proveedor?')") Eliminar

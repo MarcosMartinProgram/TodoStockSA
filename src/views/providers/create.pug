@@ -1,0 +1,30 @@
+extends ../layout
+
+block content
+  .top-bar
+    h2 Nuevo Proveedor
+    a.btn.btn-primary(href="/proveedores") Volver al listado
+
+  .card
+    form(action="/proveedores" method="POST")
+      .form-group
+        label(for="nombre") Nombre de la empresa *
+        input#nombre(type="text" name="nombre" required placeholder="Ej: Limpieza Total S.R.L.")
+
+      .form-group
+        label(for="contacto") Persona de contacto *
+        input#contacto(type="text" name="contacto" required placeholder="Ej: Juan Pérez")
+
+      .form-group
+        label(for="telefono") Teléfono *
+        input#telefono(type="text" name="telefono" required placeholder="Ej: 011-4555-1234")
+
+      .form-group
+        label(for="email") Email *
+        input#email(type="email" name="email" required placeholder="Ej: ventas@empresa.com")
+
+      .form-group
+        label(for="direccion") Dirección
+        input#direccion(type="text" name="direccion" placeholder="Ej: Av. Corrientes 1234, CABA")
+
+      button.btn.btn-success(type="submit") Crear Proveedor

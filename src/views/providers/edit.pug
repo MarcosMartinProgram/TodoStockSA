@@ -1,0 +1,30 @@
+extends ../layout
+
+block content
+  .top-bar
+    h2 Editar Proveedor
+    a.btn.btn-primary(href="/proveedores") Volver al listado
+
+  .card
+    form(action=`/proveedores/${proveedor.id}?_method=PUT` method="POST")
+      .form-group
+        label(for="nombre") Nombre de la empresa *
+        input#nombre(type="text" name="nombre" required value=proveedor.nombre)
+
+      .form-group
+        label(for="contacto") Persona de contacto *
+        input#contacto(type="text" name="contacto" required value=proveedor.contacto)
+
+      .form-group
+        label(for="telefono") Teléfono *
+        input#telefono(type="text" name="telefono" required value=proveedor.telefono)
+
+      .form-group
+        label(for="email") Email *
+        input#email(type="email" name="email" required value=proveedor.email)
+
+      .form-group
+        label(for="direccion") Dirección
+        input#direccion(type="text" name="direccion" value=proveedor.direccion)
+
+      button.btn.btn-success(type="submit") Guardar Cambios

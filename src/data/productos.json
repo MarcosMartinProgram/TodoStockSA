@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "nombre": "Lavandina Concentrada x 5L",
+    "descripcion": "Lavandina concentrada apta para uso industrial",
+    "precio": 1250.5,
+    "stock": 20,
+    "proveedorId": 1
+  },
+  {
+    "id": 2,
+    "nombre": "Detergente Multiuso x 10L",
+    "descripcion": "Detergente líquido biodegradable para superficies",
+    "precio": 3400,
+    "stock": 150,
+    "proveedorId": 2
+  },
+  {
+    "id": 3,
+    "nombre": "Alquitran 1l.",
+    "descripcion": "Botella de alquitran de 1l.",
+    "precio": 25000,
+    "stock": 20,
+    "proveedorId": 1
+  }
+]

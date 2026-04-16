@@ -1,0 +1,31 @@
+extends ../layout
+
+block content
+  .top-bar
+    h2 Detalle del Producto
+    a.btn.btn-primary(href="/productos") Volver al listado
+
+  .card
+    .detail-grid
+      dt ID
+      dd #{producto.id}
+      dt Nombre
+      dd #{producto.nombre}
+      dt Descripción
+      dd #{producto.descripcion || 'Sin descripción'}
+      dt Precio
+      dd $#{producto.precio.toFixed(2)}
+      dt Stock
+      dd #{producto.stock} unidades
+      dt Proveedor
+      dd
+        if producto.proveedor
+          a(href=`/proveedores/${producto.proveedor.id}`) #{producto.proveedor.nombre}
+          |  (#{producto.proveedor.contacto} - #{producto.proveedor.telefono})
+        else
+          em Sin proveedor asignado
+
+  .actions
+    a.btn.btn-warning(href=`/productos/${producto.id}/editar`) Editar
+    form.inline(action=`/productos/${producto.id}?_method=DELETE` method="POST")
+      button.btn.btn-danger(type="submit" onclick="return confirm('¿Está seguro?')") Eliminar

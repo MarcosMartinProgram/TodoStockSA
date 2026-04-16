@@ -1,0 +1,32 @@
+extends ../layout
+
+block content
+  .top-bar
+    h2 Editar Producto
+    a.btn.btn-primary(href="/productos") Volver al listado
+
+  .card
+    form(action=`/productos/${producto.id}?_method=PUT` method="POST")
+      .form-group
+        label(for="nombre") Nombre *
+        input#nombre(type="text" name="nombre" required value=producto.nombre)
+
+      .form-group
+        label(for="descripcion") Descripción
+        textarea#descripcion(name="descripcion")= producto.descripcion
+
+      .form-group
+        label(for="precio") Precio *
+        input#precio(type="number" name="precio" step="0.01" min="0" required value=producto.precio)
+
+      .form-group
+        label(for="stock") Stock *
+        input#stock(type="number" name="stock" min="0" required value=producto.stock)
+
+      .form-group
+        label(for="proveedorId") Proveedor *
+        select#proveedorId(name="proveedorId" required)
+          each prov in proveedores
+            option(value=prov.id selected=(prov.id === producto.proveedorId)) #{prov.nombre}
+
+      button.btn.btn-success(type="submit") Guardar Cambios

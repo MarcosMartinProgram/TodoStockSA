@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "nombre": "Limpieza Total S.R.L.",
+    "contacto": "Juan Pérez",
+    "telefono": "011-4555-1234",
+    "email": "ventas@limpiezatotal.com",
+    "direccion": "Av. Corrientes 1234, CABA"
+  },
+  {
+    "id": 2,
+    "nombre": "QuímicaPro S.A.",
+    "contacto": "María García",
+    "telefono": "011-4888-5678",
+    "email": "contacto@quimicapro.com",
+    "direccion": "Ruta 9 Km 45, Provincia de Buenos Aires"
+  }
+]
