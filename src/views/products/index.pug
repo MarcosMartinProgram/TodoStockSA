@@ -1,37 +1,51 @@
 extends ../layout
 
 block content
+  section.section-banner
+    .section-copy
+      span.eyebrow Catalogo operativo
+      h2 Listado de productos
+      p.
+        Visualice rápidamente precio, stock y proveedor asignado en una pantalla pensada para lectura comercial y movimiento de depósito.
+      .kpi-row
+        span.chip Stock y rotacion
+        span.chip Precios actualizados
+        span.chip Vinculo con proveedores
+    .section-media(style="background-image: url('https://images.unsplash.com/photo-1556228578-8c89e6adf883?auto=format&fit=crop&w=1200&q=80');")
+
   .top-bar
-    h2 Listado de Productos
+    p.muted Revise, cree y mantenga su inventario desde un tablero más visual.
     a.btn.btn-success(href="/productos/crear") + Nuevo Producto
 
   if productos.length === 0
     .alert.alert-danger No hay productos registrados.
   else
-    table
-      thead
-        tr
-          th ID
-          th Nombre
-          th Precio
-          th Stock
-          th Proveedor
-          th Acciones
-      tbody
-        each producto in productos
-          tr
-            td #{producto.id}
-            td #{producto.nombre}
-            td $#{producto.precio.toFixed(2)}
-            td #{producto.stock}
-            td
-              if producto.proveedor
-                | #{producto.proveedor.nombre}
-              else
-                em(style="color:#999") Sin proveedor
-            td
-              .actions
-                a.btn.btn-primary(href=`/productos/${producto.id}`) Ver
-                a.btn.btn-warning(href=`/productos/${producto.id}/editar`) Editar
-                form.inline(action=`/productos/${producto.id}?_method=DELETE` method="POST")
-                  button.btn.btn-danger(type="submit" onclick="return confirm('¿Está seguro de eliminar este producto?')") Eliminar
+    .data-panel
+      .table-wrap
+        table
+          thead
+            tr
+              th ID
+              th Nombre
+              th Precio
+              th Stock
+              th Proveedor
+              th Acciones
+          tbody
+            each producto in productos
+              tr
+                td #{producto.id}
+                td #{producto.nombre}
+                td $#{producto.precio.toFixed(2)}
+                td #{producto.stock}
+                td
+                  if producto.proveedor
+                    | #{producto.proveedor.nombre}
+                  else
+                    em.muted Sin proveedor
+                td
+                  .actions
+                    a.btn.btn-primary(href=`/productos/${producto.id}`) Ver
+                    a.btn.btn-warning(href=`/productos/${producto.id}/editar`) Editar
+                    form.inline(action=`/productos/${producto.id}?_method=DELETE` method="POST")
+                      button.btn.btn-danger(type="submit" onclick="return confirm('¿Está seguro de eliminar este producto?')") Eliminar

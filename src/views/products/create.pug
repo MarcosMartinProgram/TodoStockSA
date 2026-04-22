@@ -1,8 +1,20 @@
 extends ../layout
 
 block content
+  section.section-banner
+    .section-copy
+      span.eyebrow Alta de inventario
+      h2 Nuevo producto
+      p.
+        Cargue un artículo con datos claros de precio, stock y proveedor para mantener consistente el flujo de inventario.
+      .kpi-row
+        span.chip Datos comerciales
+        span.chip Vinculo con proveedor
+        span.chip Registro operativo
+    .section-media(style="background-image: url('https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=1200&q=80');")
+
   .top-bar
-    h2 Nuevo Producto
+    p.muted Complete la ficha del producto para incorporarlo al catalogo operativo.
     a.btn.btn-primary(href="/productos") Volver al listado
 
   .card

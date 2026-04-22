@@ -1,8 +1,20 @@
 extends ../layout
 
 block content
+  section.section-banner
+    .section-copy
+      span.eyebrow Ficha de producto
+      h2 Detalle del producto
+      p.
+        Consulte la información operativa del artículo y su relación con el proveedor desde una vista más legible.
+      .kpi-row
+        span.chip Precio vigente
+        span.chip Stock visible
+        span.chip Proveedor asociado
+    .section-media(style="background-image: url('https://images.unsplash.com/photo-1585421514738-01798e348b17?auto=format&fit=crop&w=1200&q=80');")
+
   .top-bar
-    h2 Detalle del Producto
+    p.muted Revise la ficha completa antes de editar o eliminar el registro.
     a.btn.btn-primary(href="/productos") Volver al listado
 
   .card

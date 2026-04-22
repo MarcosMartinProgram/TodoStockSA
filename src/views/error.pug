@@ -2,7 +2,10 @@ extends layout
 
 block content
   .card
+    span.eyebrow Incidencia detectada
     h2 Error #{statusCode}
     p #{message}
     br
-    a.btn.btn-primary(href="/") Volver al inicio
+    .actions
+      a.btn.btn-primary(href="/") Volver al inicio
+      a.btn.btn-success(href="/productos") Ir a productos

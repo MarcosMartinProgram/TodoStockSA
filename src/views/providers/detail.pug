@@ -1,8 +1,20 @@
 extends ../layout
 
 block content
+  section.section-banner
+    .section-copy
+      span.eyebrow Ficha comercial
+      h2 Detalle del proveedor
+      p.
+        Vea los datos clave del proveedor y los productos asociados desde una misma pantalla de consulta.
+      .kpi-row
+        span.chip Contacto visible
+        span.chip Empresa asociada
+        span.chip Productos vinculados
+    .section-media(style="background-image: url('https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&q=80');")
+
   .top-bar
-    h2 Detalle del Proveedor
+    p.muted Revise información de contacto y relación comercial antes de realizar cambios.
     a.btn.btn-primary(href="/proveedores") Volver al listado
 
   .card
@@ -20,25 +32,27 @@ block content
       dt Dirección
       dd #{proveedor.direccion || 'Sin dirección registrada'}
 
-  h3(style="margin: 20px 0 10px") Productos Asociados
+  h3(style="margin: 6px 0 10px") Productos Asociados
   if productosAsociados.length === 0
     .alert.alert-success Este proveedor no tiene productos asociados.
   else
-    table
-      thead
-        tr
-          th ID
-          th Nombre
-          th Precio
-          th Stock
-      tbody
-        each prod in productosAsociados
-          tr
-            td #{prod.id}
-            td
-              a(href=`/productos/${prod.id}`) #{prod.nombre}
-            td $#{prod.precio.toFixed(2)}
-            td #{prod.stock}
+    .data-panel
+      .table-wrap
+        table
+          thead
+            tr
+              th ID
+              th Nombre
+              th Precio
+              th Stock
+          tbody
+            each prod in productosAsociados
+              tr
+                td #{prod.id}
+                td
+                  a(href=`/productos/${prod.id}`) #{prod.nombre}
+                td $#{prod.precio.toFixed(2)}
+                td #{prod.stock}
 
   .actions(style="margin-top: 15px")
     a.btn.btn-warning(href=`/proveedores/${proveedor.id}/editar`) Editar

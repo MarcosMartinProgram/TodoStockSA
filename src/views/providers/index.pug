@@ -1,33 +1,47 @@
 extends ../layout
 
 block content
+  section.section-banner
+    .section-copy
+      span.eyebrow Red comercial
+      h2 Listado de proveedores
+      p.
+        Controle la base de abastecimiento con una vista más sólida, pensada para detectar rápido contactos, teléfonos y empresas activas.
+      .kpi-row
+        span.chip Contactos clave
+        span.chip Datos unificados
+        span.chip Mejor lectura operativa
+    .section-media(style="background-image: url('https://images.unsplash.com/photo-1604335399105-a0c585fd81a1?auto=format&fit=crop&w=1200&q=80');")
+
   .top-bar
-    h2 Listado de Proveedores
+    p.muted Gestione relaciones comerciales y mantenga organizada la información de abastecimiento.
     a.btn.btn-success(href="/proveedores/crear") + Nuevo Proveedor
 
   if proveedores.length === 0
     .alert.alert-danger No hay proveedores registrados.
   else
-    table
-      thead
-        tr
-          th ID
-          th Nombre
-          th Contacto
-          th Teléfono
-          th Email
-          th Acciones
-      tbody
-        each prov in proveedores
-          tr
-            td #{prov.id}
-            td #{prov.nombre}
-            td #{prov.contacto}
-            td #{prov.telefono}
-            td #{prov.email}
-            td
-              .actions
-                a.btn.btn-primary(href=`/proveedores/${prov.id}`) Ver
-                a.btn.btn-warning(href=`/proveedores/${prov.id}/editar`) Editar
-                form.inline(action=`/proveedores/${prov.id}?_method=DELETE` method="POST")
-                  button.btn.btn-danger(type="submit" onclick="return confirm('¿Está seguro de eliminar este proveedor?')") Eliminar
+    .data-panel
+      .table-wrap
+        table
+          thead
+            tr
+              th ID
+              th Nombre
+              th Contacto
+              th Teléfono
+              th Email
+              th Acciones
+          tbody
+            each prov in proveedores
+              tr
+                td #{prov.id}
+                td #{prov.nombre}
+                td #{prov.contacto}
+                td #{prov.telefono}
+                td #{prov.email}
+                td
+                  .actions
+                    a.btn.btn-primary(href=`/proveedores/${prov.id}`) Ver
+                    a.btn.btn-warning(href=`/proveedores/${prov.id}/editar`) Editar
+                    form.inline(action=`/proveedores/${prov.id}?_method=DELETE` method="POST")
+                      button.btn.btn-danger(type="submit" onclick="return confirm('¿Está seguro de eliminar este proveedor?')") Eliminar

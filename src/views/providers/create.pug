@@ -1,8 +1,20 @@
 extends ../layout
 
 block content
+  section.section-banner
+    .section-copy
+      span.eyebrow Alta comercial
+      h2 Nuevo proveedor
+      p.
+        Incorpore una empresa proveedora con sus datos de contacto para sostener el circuito de compras y reposición.
+      .kpi-row
+        span.chip Contacto directo
+        span.chip Datos centralizados
+        span.chip Base comercial
+    .section-media(style="background-image: url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=1200&q=80');")
+
   .top-bar
-    h2 Nuevo Proveedor
+    p.muted Registre la empresa y su persona de contacto para integrarla a la red de abastecimiento.
     a.btn.btn-primary(href="/proveedores") Volver al listado
 
   .card

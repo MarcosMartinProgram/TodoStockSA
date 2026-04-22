@@ -1,8 +1,20 @@
 extends ../layout
 
 block content
+  section.section-banner
+    .section-copy
+      span.eyebrow Ajuste de inventario
+      h2 Editar producto
+      p.
+        Actualice la información del artículo sin perder contexto comercial sobre stock, descripción y proveedor.
+      .kpi-row
+        span.chip Revision rapida
+        span.chip Datos consistentes
+        span.chip Mantenimiento de catalogo
+    .section-media(style="background-image: url('https://images.unsplash.com/photo-1615486363973-f79d87578067?auto=format&fit=crop&w=1200&q=80');")
+
   .top-bar
-    h2 Editar Producto
+    p.muted Modifique los datos del producto y guarde los cambios en el inventario.
     a.btn.btn-primary(href="/productos") Volver al listado
 
   .card

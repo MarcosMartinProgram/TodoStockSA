@@ -1,11 +1,38 @@
 extends layout
 
 block content
-  h2 Bienvenido a TodoStock S.A.
-  p.
-    Sistema de gestión para la distribuidora mayorista de artículos de limpieza.
-    Administre sus productos y proveedores de forma sencilla.
-  br
-  .actions
-    a.btn.btn-primary(href="/productos") Ver Productos
-    a.btn.btn-success(href="/proveedores") Ver Proveedores
+  section.hero-home
+    .hero-copy
+      span.eyebrow Operacion central
+      h2 Encontrá todo lo que necesitás para gestionar tu negocio de limpieza
+      p.
+        TodoStock te ayuda a encontrar todos los productos que necesitas para hacer explotar tus ventas.
+      .hero-actions
+        a.btn.btn-primary(href="/productos") Explorar productos
+        a.btn.btn-success(href="/proveedores") Revisar proveedores
+      .kpi-row
+        span.chip Inventario mayorista
+        span.chip Gestión administrativa
+        span.chip Flujo de abastecimiento
+    .hero-media(style="background-image: url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=80');")
+      .hero-badge
+        strong Operación de  distribución
+        span Enfocado en limpieza profesional, stock y movimiento comercial.
+
+  
+
+  section.feature-grid
+    article.feature-card
+      span.eyebrow Inventario
+      h3 Productos listos para mover stock
+      p Seguimiento de precio, stock y proveedor desde una tabla más clara y menos genérica.
+      a.btn.btn-primary(href="/productos") Ir al catalogo
+    article.feature-card
+      span.eyebrow Abastecimiento
+      h3 Red de proveedores conectada
+      p Cada proveedor conserva su información clave para sostener compras, contacto y reposición.
+      a.btn.btn-success(href="/proveedores") Ver proveedores
+    article.feature-card
+      span.eyebrow Proximamente
+      h3 En Construcción
+      p Se completara próximamente.
