@@ -1,11 +1,11 @@
 // src/controllers/ClientController.js
 const ClientManager  = require('../models/ClientManager');
-const AccountManager = require('../models/AccountManager');
+const CcorrienteClienteManager = require('../models/CcorrienteClienteManager');
 
 class ClientController {
   constructor() {
     this.clientManager  = new ClientManager();
-    this.accountManager = new AccountManager();
+    this.accountManager = new CcorrienteClienteManager();
   }
 
   async getAll(req, res, next) {

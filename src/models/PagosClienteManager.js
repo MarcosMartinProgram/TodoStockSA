@@ -1,9 +1,9 @@
-// src/models/PaymentManager.js
-const Pago             = require('../schemas/paymentSchema');
-const MovimientoCuenta = require('../schemas/accountSchema');
+// src/models/PagosClienteManager.js
+const Pago             = require('../schemas/pagosClienteSchema');
+const MovimientoCuenta = require('../schemas/ccorrienteClienteSchema');
 const ClientManager    = require('./ClientManager');
 
-class PaymentManager {
+class PagosClienteManager {
   constructor() {
     this.clientManager = new ClientManager();
   }
@@ -73,4 +73,4 @@ class PaymentManager {
   }
 }
 
-module.exports = PaymentManager;
+module.exports = PagosClienteManager;

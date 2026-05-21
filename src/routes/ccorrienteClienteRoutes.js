@@ -1,10 +1,10 @@
 // src/routes/accountRoutes.js
 const { Router }   = require('express');
-const AccountController = require('../controllers/AccountController');
+const CcorrienteClienteController = require('../controllers/CcorrienteClienteController');
 const mongoose     = require('mongoose');
 
 const router     = Router();
-const controller = new AccountController();
+const controller = new CcorrienteClienteController();
 
 // Valida que :clienteId sea un ObjectId válido
 function validateClienteId(req, res, next) {

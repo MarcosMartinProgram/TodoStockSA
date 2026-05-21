@@ -1,10 +1,10 @@
-// src/controllers/AccountController.js
-const AccountManager = require('../models/AccountManager');
+// src/controllers/CcorrienteClienteController.js
+const CcorrienteClienteManager = require('../models/CcorrienteClienteManager');
 const ClientManager  = require('../models/ClientManager');
 
-class AccountController {
+class CcorrienteClienteController {
   constructor() {
-    this.accountManager = new AccountManager();
+    this.accountManager = new CcorrienteClienteManager();
     this.clientManager  = new ClientManager();
   }
 
@@ -25,7 +25,7 @@ class AccountController {
       if (req.headers.accept && req.headers.accept.includes('application/json')) {
         return res.json({ cliente, movimientos, saldo });
       }
-      res.render('account/index', {
+      res.render('ccorrientecliente/index', {
         title: `Cuenta Corriente - ${cliente.nombre}`,
         cliente,
         movimientos,
@@ -35,4 +35,4 @@ class AccountController {
   }
 }
 
-module.exports = AccountController;
+module.exports = CcorrienteClienteController;

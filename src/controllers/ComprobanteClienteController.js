@@ -1,10 +1,10 @@
-// src/controllers/VoucherController.js
-const VoucherManager = require('../models/VoucherManager');
+// src/controllers/ComprobanteClienteController.js
+const ComprobanteClienteManager = require('../models/ComprobanteClienteManager');
 const ClientManager  = require('../models/ClientManager');
 
-class VoucherController {
+class ComprobanteClienteController {
   constructor() {
-    this.voucherManager = new VoucherManager();
+    this.voucherManager = new ComprobanteClienteManager();
     this.clientManager  = new ClientManager();
   }
 
@@ -14,7 +14,7 @@ class VoucherController {
       if (req.headers.accept && req.headers.accept.includes('application/json')) {
         return res.json(comprobantes);
       }
-      res.render('vouchers/index', { title: 'Comprobantes', comprobantes });
+      res.render('comprobantecliente/index', { title: 'Comprobantes', comprobantes });
     } catch (error) { next(error); }
   }
 
@@ -26,7 +26,7 @@ class VoucherController {
       if (req.headers.accept && req.headers.accept.includes('application/json')) {
         return res.json(comprobante);
       }
-      res.render('vouchers/detail', { title: `Comprobante ${comprobante.numero}`, comprobante });
+      res.render('comprobantecliente/detail', { title: `Comprobante ${comprobante.numero}`, comprobante });
     } catch (error) { next(error); }
   }
 
@@ -35,7 +35,7 @@ class VoucherController {
       const clientes = await this.clientManager.getAll();
       // Si viene ?clienteId en la query, pre-seleccionar ese cliente
       const clienteIdPresel = req.query.clienteId || null;
-      res.render('vouchers/create', { title: 'Nuevo Comprobante', clientes, clienteIdPresel });
+      res.render('comprobantecliente/create', { title: 'Nuevo Comprobante', clientes, clienteIdPresel });
     } catch (error) { next(error); }
   }
 
@@ -62,7 +62,7 @@ class VoucherController {
       const comprobante = await this.voucherManager.getById(req.params.id);
       if (!comprobante) return res.status(404).render('error', { title: 'Error 404', statusCode: 404, message: 'Comprobante no encontrado.' });
       const clientes = await this.clientManager.getAll();
-      res.render('vouchers/edit', { title: 'Editar Comprobante', comprobante, clientes });
+      res.render('comprobantecliente/edit', { title: 'Editar Comprobante', comprobante, clientes });
     } catch (error) { next(error); }
   }
 
@@ -99,4 +99,4 @@ class VoucherController {
   }
 }
 
-module.exports = VoucherController;
+module.exports = ComprobanteClienteController;

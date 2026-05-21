@@ -1,10 +1,10 @@
-// src/controllers/PaymentController.js
-const PaymentManager = require('../models/PaymentManager');
+// src/controllers/PagosClienteController.js
+const PagosClienteManager = require('../models/PagosClienteManager');
 const ClientManager  = require('../models/ClientManager');
 
-class PaymentController {
+class PagosClienteController {
   constructor() {
-    this.paymentManager = new PaymentManager();
+    this.paymentManager = new PagosClienteManager();
     this.clientManager  = new ClientManager();
   }
 
@@ -14,7 +14,7 @@ class PaymentController {
       if (req.headers.accept && req.headers.accept.includes('application/json')) {
         return res.json(pagos);
       }
-      res.render('payments/index', { title: 'Pagos', pagos });
+      res.render('pagoscliente/index', { title: 'Pagos', pagos });
     } catch (error) { next(error); }
   }
 
@@ -26,7 +26,7 @@ class PaymentController {
       if (req.headers.accept && req.headers.accept.includes('application/json')) {
         return res.json(pago);
       }
-      res.render('payments/detail', { title: 'Detalle de Pago', pago });
+      res.render('pagoscliente/detail', { title: 'Detalle de Pago', pago });
     } catch (error) { next(error); }
   }
 
@@ -34,7 +34,7 @@ class PaymentController {
     try {
       const clientes = await this.clientManager.getAll();
       const clienteIdPresel = req.query.clienteId || null;
-      res.render('payments/create', { title: 'Registrar Pago', clientes, clienteIdPresel });
+      res.render('pagoscliente/create', { title: 'Registrar Pago', clientes, clienteIdPresel });
     } catch (error) { next(error); }
   }
 
@@ -60,7 +60,7 @@ class PaymentController {
       const pago = await this.paymentManager.getById(req.params.id);
       if (!pago) return res.status(404).render('error', { title: 'Error 404', statusCode: 404, message: 'Pago no encontrado.' });
       const clientes = await this.clientManager.getAll();
-      res.render('payments/edit', { title: 'Editar Pago', pago, clientes });
+      res.render('pagoscliente/edit', { title: 'Editar Pago', pago, clientes });
     } catch (error) { next(error); }
   }
 
@@ -96,4 +96,4 @@ class PaymentController {
   }
 }
 
-module.exports = PaymentController;
+module.exports = PagosClienteController;

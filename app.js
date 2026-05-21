@@ -14,9 +14,9 @@ const ventasRoutes   = require('./src/routes/ventasRoutes');
 const productRoutes  = require('./src/routes/productRoutes');
 const providerRoutes = require('./src/routes/providerRoutes');
 const clientRoutes   = require('./src/routes/clientRoutes');
-const voucherRoutes  = require('./src/routes/voucherRoutes');
-const paymentRoutes  = require('./src/routes/paymentRoutes');
-const accountRoutes  = require('./src/routes/accountRoutes');
+const voucherRoutes  = require('./src/routes/comprobanteClienteRoutes');
+const paymentRoutes  = require('./src/routes/pagosClienteRoutes');
+const accountRoutes  = require('./src/routes/ccorrienteClienteRoutes');
 
 // Importar middleware de errores
 const errorHandler = require('./src/middlewares/errorHandler');

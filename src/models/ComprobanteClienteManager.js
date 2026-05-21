@@ -1,9 +1,9 @@
-// src/models/VoucherManager.js
-const Comprobante       = require('../schemas/voucherSchema');
-const MovimientoCuenta  = require('../schemas/accountSchema');
+// src/models/ComprobanteClienteManager.js
+const Comprobante       = require('../schemas/comprobanteClienteSchema');
+const MovimientoCuenta  = require('../schemas/ccorrienteClienteSchema');
 const ClientManager     = require('./ClientManager');
 
-class VoucherManager {
+class ComprobanteClienteManager {
   constructor() {
     this.clientManager = new ClientManager();
   }
@@ -76,4 +76,4 @@ class VoucherManager {
   }
 }
 
-module.exports = VoucherManager;
+module.exports = ComprobanteClienteManager;

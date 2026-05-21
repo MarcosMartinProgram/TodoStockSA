@@ -1,10 +1,10 @@
 // src/routes/voucherRoutes.js
 const { Router } = require('express');
-const VoucherController = require('../controllers/VoucherController');
+const ComprobanteClienteController = require('../controllers/ComprobanteClienteController');
 const { validateVoucher, validateId } = require('../middlewares/validators');
 
 const router     = Router();
-const controller = new VoucherController();
+const controller = new ComprobanteClienteController();
 
 router.get('/crear',              (req, res, next) => controller.showCreateForm(req, res, next));
 router.get('/:id/editar', validateId, (req, res, next) => controller.showEditForm(req, res, next));

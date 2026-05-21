@@ -1,10 +1,10 @@
 // src/routes/paymentRoutes.js
 const { Router } = require('express');
-const PaymentController = require('../controllers/PaymentController');
+const PagosClienteController = require('../controllers/PagosClienteController');
 const { validatePayment, validateId } = require('../middlewares/validators');
 
 const router     = Router();
-const controller = new PaymentController();
+const controller = new PagosClienteController();
 
 router.get('/crear',              (req, res, next) => controller.showCreateForm(req, res, next));
 router.get('/:id/editar', validateId, (req, res, next) => controller.showEditForm(req, res, next));

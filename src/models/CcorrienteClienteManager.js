@@ -1,7 +1,7 @@
-// src/models/AccountManager.js
-const MovimientoCuenta = require('../schemas/accountSchema');
+// src/models/CcorrienteClienteManager.js
+const MovimientoCuenta = require('../schemas/ccorrienteClienteSchema');
 
-class AccountManager {
+class CcorrienteClienteManager {
   /**
    * Devuelve todos los movimientos de un cliente ordenados por fecha,
    * con el saldo acumulado calculado en cada fila.
@@ -38,4 +38,4 @@ class AccountManager {
   }
 }
 
-module.exports = AccountManager;
+module.exports = CcorrienteClienteManager;
