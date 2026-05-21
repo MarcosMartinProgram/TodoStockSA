@@ -1,0 +1,31 @@
+extends ../layout
+
+block content
+  .detail-header
+    div
+      h2 Pago - #{pago.medioPago}
+      p.muted Cliente: #{pago.clienteId ? pago.clienteId.nombre : '-'}
+    .actions
+      a.btn.btn-warning(href=`/pagos/${pago.id}/editar`) Editar
+      form.inline(action=`/pagos/${pago.id}?_method=DELETE` method="POST")
+        button.btn.btn-danger(type="submit" onclick="return confirm('¿Eliminar este pago?')") Eliminar
+
+  .data-panel
+    .detail-grid
+      .detail-item
+        span.label Fecha
+        span.value #{new Date(pago.fecha).toLocaleDateString('es-AR')}
+      .detail-item
+        span.label Importe
+        span.value $#{pago.importe.toFixed(2)}
+      .detail-item
+        span.label Medio de Pago
+        span.value #{pago.medioPago}
+      if pago.observaciones
+        .detail-item
+          span.label Observaciones
+          span.value #{pago.observaciones}
+
+  .top-bar(style="margin-top:1rem")
+    a.btn.btn-primary(href=(pago.clienteId ? `/cuenta/${pago.clienteId.id}` : '/pagos')) Ver Cuenta Corriente del Cliente
+    a.btn(href="/pagos") Volver al listado

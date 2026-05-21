@@ -1,0 +1,34 @@
+extends ../layout
+
+block content
+  .detail-header
+    div
+      h2 #{comprobante.tipo.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Nro. #{comprobante.numero}
+      p.muted Cliente: #{comprobante.clienteId ? comprobante.clienteId.nombre : '-'}
+    .actions
+      a.btn.btn-warning(href=`/comprobantes/${comprobante.id}/editar`) Editar
+      form.inline(action=`/comprobantes/${comprobante.id}?_method=DELETE` method="POST")
+        button.btn.btn-danger(type="submit" onclick="return confirm('¿Eliminar este comprobante?')") Eliminar
+
+  .data-panel
+    .detail-grid
+      .detail-item
+        span.label Tipo
+        span.value #{comprobante.tipo.replace(/_/g, ' ')}
+      .detail-item
+        span.label Número
+        span.value #{comprobante.numero}
+      .detail-item
+        span.label Fecha
+        span.value #{new Date(comprobante.fecha).toLocaleDateString('es-AR')}
+      .detail-item
+        span.label Importe
+        span.value $#{comprobante.importe.toFixed(2)}
+      if comprobante.descripcion
+        .detail-item
+          span.label Descripción
+          span.value #{comprobante.descripcion}
+
+  .top-bar(style="margin-top:1rem")
+    a.btn.btn-primary(href=(comprobante.clienteId ? `/cuenta/${comprobante.clienteId.id}` : '/comprobantes')) Ver Cuenta Corriente del Cliente
+    a.btn(href="/comprobantes") Volver al listado

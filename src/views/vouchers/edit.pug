@@ -1,0 +1,31 @@
+extends ../layout
+
+block content
+  .form-container
+    h2 Editar Comprobante
+    p.muted(style="margin-bottom:1rem") Nota: editar un comprobante no recalcula el movimiento en cuenta corriente. Para corregir importes, eliminá y volvé a crear el comprobante.
+    form(action=`/comprobantes/${comprobante.id}?_method=PUT` method="POST")
+      .form-group
+        label Cliente
+        input(type="text" disabled value=(comprobante.clienteId ? comprobante.clienteId.nombre : '-'))
+      .form-group
+        label(for="tipo") Tipo *
+        select#tipo(name="tipo" required)
+          option(value="factura" selected=(comprobante.tipo === 'factura')) Factura
+          option(value="nota_debito" selected=(comprobante.tipo === 'nota_debito')) Nota de Débito
+          option(value="nota_credito" selected=(comprobante.tipo === 'nota_credito')) Nota de Crédito
+      .form-group
+        label(for="numero") Número *
+        input#numero(type="text" name="numero" required value=comprobante.numero)
+      .form-group
+        label(for="fecha") Fecha *
+        input#fecha(type="date" name="fecha" required value=new Date(comprobante.fecha).toISOString().split('T')[0])
+      .form-group
+        label(for="importe") Importe *
+        input#importe(type="number" name="importe" required min="0.01" step="0.01" value=comprobante.importe)
+      .form-group
+        label(for="descripcion") Descripción
+        input#descripcion(type="text" name="descripcion" value=comprobante.descripcion)
+      .form-actions
+        button.btn.btn-success(type="submit") Guardar Cambios
+        a.btn(href="/comprobantes") Cancelar

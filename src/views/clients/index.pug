@@ -1,0 +1,47 @@
+extends ../layout
+
+block content
+  section.section-banner
+    .section-copy
+      span.eyebrow Cartera de clientes
+      h2 Listado de clientes
+      p.
+        Gestione sus clientes, consulte comprobantes, pagos y el estado de cuenta corriente de cada uno.
+      .kpi-row
+        span.chip Cuenta corriente
+        span.chip Comprobantes
+        span.chip Pagos
+    .section-media(style="background-image: url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=80');")
+
+  .top-bar
+    p.muted Administre la información y el historial comercial de cada cliente.
+    a.btn.btn-success(href="/clientes/crear") + Nuevo Cliente
+
+  if clientes.length === 0
+    .alert.alert-danger No hay clientes registrados.
+  else
+    .data-panel
+      .table-wrap
+        table
+          thead
+            tr
+              th Nombre
+              th CUIT
+              th Email
+              th Teléfono
+              th Cond. IVA
+              th Acciones
+          tbody
+            each cliente in clientes
+              tr
+                td #{cliente.nombre}
+                td #{cliente.cuit}
+                td #{cliente.email}
+                td #{cliente.telefono || '-'}
+                td #{cliente.condicionIva.replace('_', ' ')}
+                td
+                  .actions
+                    a.btn.btn-primary(href=`/clientes/${cliente.id}`) Ver
+                    a.btn.btn-warning(href=`/clientes/${cliente.id}/editar`) Editar
+                    form.inline(action=`/clientes/${cliente.id}?_method=DELETE` method="POST")
+                      button.btn.btn-danger(type="submit" onclick="return confirm('¿Está seguro de eliminar este cliente?')") Eliminar

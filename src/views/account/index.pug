@@ -1,0 +1,50 @@
+extends ../layout
+
+block content
+  .detail-header
+    div
+      h2 Cuenta Corriente
+      p.muted #{cliente.nombre} &nbsp;|&nbsp; CUIT: #{cliente.cuit}
+    .actions
+      a.btn.btn-success(href=`/comprobantes/crear?clienteId=${cliente.id}`) + Comprobante
+      a.btn.btn-success(href=`/pagos/crear?clienteId=${cliente.id}`) + Pago
+      a.btn(href=`/clientes/${cliente.id}`) Volver al cliente
+
+  .data-panel(style="margin-bottom:1.5rem")
+    .detail-grid
+      .detail-item
+        span.label Saldo actual
+        span.value(class=(saldo > 0 ? 'text-danger' : saldo < 0 ? 'text-success' : ''))
+          | $#{Math.abs(saldo).toFixed(2)}
+          if saldo > 0
+            |  (deuda del cliente)
+          else if saldo < 0
+            |  (saldo a favor del cliente)
+          else
+            |  (sin saldo)
+
+  if movimientos.length === 0
+    .alert.alert-danger No hay movimientos registrados para este cliente.
+  else
+    .data-panel
+      .table-wrap
+        table
+          thead
+            tr
+              th Fecha
+              th Tipo
+              th Concepto
+              th Débito
+              th Crédito
+              th Saldo
+          tbody
+            each mov in movimientos
+              tr
+                td #{new Date(mov.fecha).toLocaleDateString('es-AR')}
+                td
+                  span(class=`chip chip-${mov.tipo === 'debito' ? 'warning' : 'success'}`) #{mov.tipo}
+                td #{mov.concepto}
+                td #{mov.tipo === 'debito' ? '$' + mov.importe.toFixed(2) : '-'}
+                td #{mov.tipo === 'credito' ? '$' + mov.importe.toFixed(2) : '-'}
+                td(class=(mov.saldoAcumulado > 0 ? 'text-danger' : mov.saldoAcumulado < 0 ? 'text-success' : ''))
+                  | $#{Math.abs(mov.saldoAcumulado).toFixed(2)}
