@@ -39,7 +39,7 @@ block content
                   span(class=`chip chip-${comp.tipo === 'factura' ? 'success' : comp.tipo === 'nota_debito' ? 'warning' : 'info'}`)
                     | #{comp.tipo.replace(/_/g, ' ')}
                 td #{comp.numero}
-                td #{comp.clienteId ? comp.clienteId.nombre : '-'}
+                td #{comp.clienteId ? comp.clienteId.nombre : (comp.receptorNombre || 'Consumidor Final')}
                 td $#{comp.importe.toFixed(2)}
                 td
                   .actions

@@ -1,11 +1,13 @@
 // src/controllers/ComprobanteClienteController.js
 const ComprobanteClienteManager = require('../models/ComprobanteClienteManager');
 const ClientManager  = require('../models/ClientManager');
+const ProductManager = require('../models/ProductManager');
 
 class ComprobanteClienteController {
   constructor() {
     this.voucherManager = new ComprobanteClienteManager();
     this.clientManager  = new ClientManager();
+    this.productManager = new ProductManager();
   }
 
   async getAll(req, res, next) {
@@ -33,27 +35,64 @@ class ComprobanteClienteController {
   async showCreateForm(req, res, next) {
     try {
       const clientes = await this.clientManager.getAll();
+      const productos = await this.productManager.getAll();
       // Si viene ?clienteId en la query, pre-seleccionar ese cliente
       const clienteIdPresel = req.query.clienteId || null;
-      res.render('comprobantecliente/create', { title: 'Nuevo Comprobante', clientes, clienteIdPresel });
+      res.render('comprobantecliente/create', {
+        title: 'Nuevo Comprobante',
+        clientes,
+        productos,
+        clienteIdPresel
+      });
     } catch (error) { next(error); }
+  }
+
+  parseItemsFromBody(body) {
+    const productoIds = Array.isArray(body.productoId) ? body.productoId : [body.productoId];
+    const cantidades = Array.isArray(body.cantidad) ? body.cantidad : [body.cantidad];
+
+    return productoIds
+      .map((productoId, index) => ({
+        productoId: (productoId || '').trim(),
+        cantidad: Number(cantidades[index])
+      }))
+      .filter(item => item.productoId && Number.isFinite(item.cantidad) && item.cantidad > 0);
   }
 
   async create(req, res, next) {
     try {
-      const { clienteId, tipo, numero, fecha, descripcion, importe } = req.body;
-      const nuevoComprobante = await this.voucherManager.create({
+      const {
         clienteId,
+        receptorTipo,
+        receptorNombre,
+        tipo,
+        numero,
+        fecha,
+        descripcion,
+        importe
+      } = req.body;
+
+      const items = this.parseItemsFromBody(req.body);
+      const nuevoComprobante = await this.voucherManager.create({
+        receptorTipo: receptorTipo || 'cliente',
+        clienteId,
+        receptorNombre,
         tipo,
         numero:      numero.trim(),
         fecha:       new Date(fecha),
         descripcion: descripcion ? descripcion.trim() : '',
-        importe:     Number(importe)
+        importe:     Number(importe),
+        items
       });
       if (req.headers.accept && req.headers.accept.includes('application/json')) {
         return res.status(201).json(nuevoComprobante);
       }
-      res.redirect(`/clientes/${clienteId}`);
+
+      if (nuevoComprobante.receptorTipo === 'cliente' && nuevoComprobante.clienteId) {
+        return res.redirect(`/clientes/${nuevoComprobante.clienteId}`);
+      }
+
+      res.redirect('/comprobantes');
     } catch (error) { next(error); }
   }
 

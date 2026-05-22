@@ -97,10 +97,25 @@ function validateClient(req, res, next) {
  * Valida campos obligatorios de un comprobante.
  */
 function validateVoucher(req, res, next) {
-  const { clienteId, tipo, numero, fecha, importe } = req.body;
+  const {
+    clienteId,
+    receptorTipo,
+    tipo,
+    numero,
+    fecha,
+    importe,
+    productoId,
+    cantidad
+  } = req.body;
   const errors = [];
 
-  if (!clienteId || !mongoose.Types.ObjectId.isValid(clienteId)) {
+  const tipoReceptor = receptorTipo || 'cliente';
+
+  if (!['cliente', 'consumidor_final'].includes(tipoReceptor)) {
+    errors.push('El campo "receptorTipo" debe ser cliente o consumidor_final.');
+  }
+
+  if (tipoReceptor === 'cliente' && (!clienteId || !mongoose.Types.ObjectId.isValid(clienteId))) {
     errors.push('El campo "clienteId" es obligatorio y debe ser un ID válido.');
   }
 
@@ -114,7 +129,14 @@ function validateVoucher(req, res, next) {
   if (!fecha) {
     errors.push('El campo "fecha" es obligatorio.');
   }
-  if (importe === undefined || importe === null || isNaN(Number(importe)) || Number(importe) <= 0) {
+  const productoIds = Array.isArray(productoId) ? productoId : [productoId];
+  const cantidades = Array.isArray(cantidad) ? cantidad : [cantidad];
+  const hasItems = productoIds.some((id, index) => {
+    const qty = Number(cantidades[index]);
+    return id && mongoose.Types.ObjectId.isValid(id) && Number.isFinite(qty) && qty > 0;
+  });
+
+  if (!hasItems && (importe === undefined || importe === null || isNaN(Number(importe)) || Number(importe) <= 0)) {
     errors.push('El campo "importe" es obligatorio y debe ser mayor a 0.');
   }
 
