@@ -6,6 +6,8 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 
+const connectDB = require('./src/config/db');
+
 // Importar rutas
 const productRoutes = require('./src/routes/productRoutes');
 const providerRoutes = require('./src/routes/providerRoutes');
@@ -21,12 +23,10 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'src', 'views'));
 
 // --- Middlewares globales ---
-// Parseo de JSON y datos de formularios
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Method Override: permite usar PUT y DELETE desde formularios HTML
-// Los formularios envían POST con ?_method=PUT o ?_method=DELETE
 app.use((req, res, next) => {
   if (req.query._method) {
     req.method = req.query._method.toUpperCase();
@@ -35,12 +35,10 @@ app.use((req, res, next) => {
 });
 
 // Conversión de tipos numéricos desde formularios HTML
-// (los formularios envían todo como string, este middleware convierte campos numéricos)
 app.use((req, res, next) => {
   if (req.body) {
     if (req.body.precio !== undefined) req.body.precio = Number(req.body.precio);
     if (req.body.stock !== undefined) req.body.stock = Number(req.body.stock);
-    if (req.body.proveedorId !== undefined) req.body.proveedorId = Number(req.body.proveedorId);
   }
   next();
 });
@@ -66,10 +64,12 @@ app.use((req, res) => {
 // --- Middleware global de errores ---
 app.use(errorHandler);
 
-// --- Inicio del servidor ---
-app.listen(PORT, () => {
-  console.log(`[TodoStock S.A.] Servidor corriendo en http://localhost:${PORT}`);
-  console.log(`[TodoStock S.A.] Entorno: ${process.env.NODE_ENV || 'development'}`);
+// --- Inicio del servidor conectado a MongoDB ---
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`[TodoStock S.A.] Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`[TodoStock S.A.] Entorno: ${process.env.NODE_ENV || 'development'}`);
+  });
 });
 
 module.exports = app;
