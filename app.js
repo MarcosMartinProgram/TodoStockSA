@@ -6,6 +6,16 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 
+const connectDB = require('./src/config/db');
+
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`[TodoStock S.A.] Servidor corriendo en http://localhost:${PORT}`);
+    console.log(`[TodoStock S.A.] Entorno: ${process.env.NODE_ENV || 'development'}`);
+  });
+});
+
+
 // Importar rutas
 const productRoutes = require('./src/routes/productRoutes');
 const providerRoutes = require('./src/routes/providerRoutes');
@@ -40,7 +50,7 @@ app.use((req, res, next) => {
   if (req.body) {
     if (req.body.precio !== undefined) req.body.precio = Number(req.body.precio);
     if (req.body.stock !== undefined) req.body.stock = Number(req.body.stock);
-    if (req.body.proveedorId !== undefined) req.body.proveedorId = Number(req.body.proveedorId);
+    
   }
   next();
 });
@@ -67,9 +77,6 @@ app.use((req, res) => {
 app.use(errorHandler);
 
 // --- Inicio del servidor ---
-app.listen(PORT, () => {
-  console.log(`[TodoStock S.A.] Servidor corriendo en http://localhost:${PORT}`);
-  console.log(`[TodoStock S.A.] Entorno: ${process.env.NODE_ENV || 'development'}`);
-});
+
 
 module.exports = app;
