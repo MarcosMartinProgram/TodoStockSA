@@ -8,7 +8,6 @@ const path    = require('path');
 
 const connectDB = require('./src/config/db');
 
-
 // Importar rutas
 const loginRoutes    = require('./src/routes/loginRoutes');
 const ventasRoutes   = require('./src/routes/ventasRoutes');
