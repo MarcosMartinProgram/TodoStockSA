@@ -185,10 +185,15 @@ En la segunda etapa se trabajo por ramas y luego se consolido todo en una rama d
 ## Instalacion
 
 ```bash
-git clone <URL_DEL_REPOSITORIO>
-cd LuminaCode
+git clone https://github.com/MarcosMartinProgram/TodoStockSA.git
+cd TodoStockSA
 npm install
 ```
+
+Notas:
+
+- El nombre de la carpeta local depende del nombre del repositorio clonado o del nombre que se indique al clonar.
+- Si se clona con otro nombre, reemplazar `cd TodoStockSA` por el nombre real de la carpeta local.
 
 ---
 
