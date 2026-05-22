@@ -39,8 +39,8 @@ block content
                 td $#{producto.precio.toFixed(2)}
                 td #{producto.stock}
                 td
-                  if producto.proveedor
-                    | #{producto.proveedor.nombre}
+                  if producto.proveedorId
+                    | #{producto.proveedorId.nombre}
                   else
                     em.muted Sin proveedor
                 td

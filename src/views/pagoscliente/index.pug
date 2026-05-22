@@ -1,0 +1,47 @@
+extends ../layout
+
+block content
+  section.section-banner
+    .section-copy
+      span.eyebrow Cobros
+      h2 Pagos recibidos
+      p.
+        Registre los pagos de sus clientes. Cada pago genera automáticamente un crédito en la cuenta corriente.
+      .kpi-row
+        span.chip Efectivo
+        span.chip Transferencia
+        span.chip Cheque
+    .section-media(style="background-image: url('https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=1200&q=80');")
+
+  .top-bar
+    p.muted Historial de pagos recibidos.
+    a.btn.btn-success(href="/pagos/crear") + Registrar Pago
+
+  if pagos.length === 0
+    .alert.alert-danger No hay pagos registrados.
+  else
+    .data-panel
+      .table-wrap
+        table
+          thead
+            tr
+              th Fecha
+              th Cliente
+              th Medio de Pago
+              th Importe
+              th Observaciones
+              th Acciones
+          tbody
+            each pago in pagos
+              tr
+                td #{new Date(pago.fecha).toLocaleDateString('es-AR')}
+                td #{pago.clienteId ? pago.clienteId.nombre : '-'}
+                td #{pago.medioPago}
+                td $#{pago.importe.toFixed(2)}
+                td #{pago.observaciones || '-'}
+                td
+                  .actions
+                    a.btn.btn-primary(href=`/pagos/${pago.id}`) Ver
+                    a.btn.btn-warning(href=`/pagos/${pago.id}/editar`) Editar
+                    form.inline(action=`/pagos/${pago.id}?_method=DELETE` method="POST")
+                      button.btn.btn-danger(type="submit" onclick="return confirm('¿Eliminar este pago?')") Eliminar

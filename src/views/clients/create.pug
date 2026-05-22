@@ -1,0 +1,31 @@
+extends ../layout
+
+block content
+  .form-container
+    h2 Nuevo Cliente
+    form(action="/clientes" method="POST")
+      .form-group
+        label(for="nombre") Nombre / Razón Social *
+        input#nombre(type="text" name="nombre" required placeholder="Ej: Juan Pérez")
+      .form-group
+        label(for="cuit") CUIT *
+        input#cuit(type="text" name="cuit" required placeholder="Ej: 20-12345678-9")
+      .form-group
+        label(for="email") Email *
+        input#email(type="email" name="email" required placeholder="cliente@email.com")
+      .form-group
+        label(for="telefono") Teléfono
+        input#telefono(type="text" name="telefono" placeholder="Ej: 011-4444-5555")
+      .form-group
+        label(for="direccion") Dirección
+        input#direccion(type="text" name="direccion" placeholder="Ej: Av. Corrientes 1234, CABA")
+      .form-group
+        label(for="condicionIva") Condición IVA
+        select#condicionIva(name="condicionIva")
+          option(value="consumidor_final") Consumidor Final
+          option(value="responsable_inscripto") Responsable Inscripto
+          option(value="monotributista") Monotributista
+          option(value="exento") Exento
+      .form-actions
+        button.btn.btn-success(type="submit") Guardar Cliente
+        a.btn(href="/clientes") Cancelar

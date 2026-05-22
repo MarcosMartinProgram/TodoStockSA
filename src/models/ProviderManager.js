@@ -5,7 +5,6 @@
 const Proveedor = require('../schemas/providerSchema');
 
 class ProviderManager {
-
   async getAll() {
     return await Proveedor.find();
   }

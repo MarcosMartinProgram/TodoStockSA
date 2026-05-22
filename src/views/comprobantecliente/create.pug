@@ -1,0 +1,33 @@
+extends ../layout
+
+block content
+  .form-container
+    h2 Nuevo Comprobante
+    form(action="/comprobantes" method="POST")
+      .form-group
+        label(for="clienteId") Cliente *
+        select#clienteId(name="clienteId" required)
+          option(value="") Seleccione un cliente...
+          each cliente in clientes
+            option(value=cliente.id selected=(clienteIdPresel && clienteIdPresel === cliente.id)) #{cliente.nombre} (#{cliente.cuit})
+      .form-group
+        label(for="tipo") Tipo de Comprobante *
+        select#tipo(name="tipo" required)
+          option(value="factura") Factura
+          option(value="nota_debito") Nota de Débito
+          option(value="nota_credito") Nota de Crédito
+      .form-group
+        label(for="numero") Número *
+        input#numero(type="text" name="numero" required placeholder="Ej: 0001-00012345")
+      .form-group
+        label(for="fecha") Fecha *
+        input#fecha(type="date" name="fecha" required)
+      .form-group
+        label(for="importe") Importe *
+        input#importe(type="number" name="importe" required min="0.01" step="0.01" placeholder="0.00")
+      .form-group
+        label(for="descripcion") Descripción
+        input#descripcion(type="text" name="descripcion" placeholder="Descripción opcional")
+      .form-actions
+        button.btn.btn-success(type="submit") Guardar Comprobante
+        a.btn(href="/comprobantes") Cancelar

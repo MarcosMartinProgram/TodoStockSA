@@ -33,7 +33,6 @@ class ProductManager {
       error.statusCode = 400;
       throw error;
     }
-
     const newProduct = new Producto(productData);
     return await newProduct.save();
   }
@@ -47,7 +46,6 @@ class ProductManager {
         throw error;
       }
     }
-
     return await Producto.findByIdAndUpdate(id, productData, { new: true });
   }
 

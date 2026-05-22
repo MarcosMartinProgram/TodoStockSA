@@ -31,9 +31,9 @@ block content
       dd #{producto.stock} unidades
       dt Proveedor
       dd
-        if producto.proveedor
-          a(href=`/proveedores/${producto.proveedor.id}`) #{producto.proveedor.nombre}
-          |  (#{producto.proveedor.contacto} - #{producto.proveedor.telefono})
+        if producto.proveedorId
+          a(href=`/proveedores/${producto.proveedorId.id}`) #{producto.proveedorId.nombre}
+          |  (#{producto.proveedorId.contacto} - #{producto.proveedorId.telefono})
         else
           em Sin proveedor asignado
 

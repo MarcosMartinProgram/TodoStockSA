@@ -1,18 +1,13 @@
 {
   "name": "todostock-backend",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Sistema de gestión para TodoStock S.A. - Distribuidora Mayorista",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "node --watch app.js"
   },
-  "keywords": [
-    "express",
-    "mvc",
-    "pug",
-    "crud"
-  ],
+  "keywords": ["express", "mvc", "pug", "mongodb", "mongoose"],
   "author": "",
   "license": "ISC",
   "dependencies": {
