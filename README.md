@@ -2,122 +2,191 @@
 
 ## Descripcion General
 
-Sistema de gestion desarrollado para **TodoStock S.A.**, distribuidora mayorista de articulos de limpieza. La aplicacion permite administrar el inventario de **Productos** y **Proveedores** mediante operaciones CRUD completas, con persistencia en archivos JSON y una interfaz web renderizada con Pug.
+Sistema de gestion para **TodoStock S.A.** (distribuidora mayorista), desarrollado con Node.js, Express, Pug y MongoDB.
 
-Proyecto desarrollado como entrega parcial para la materia **Desarrollo Web Backend**.
+El proyecto evoluciono en dos etapas:
+
+- **Etapa 1**: CRUD de productos y proveedores con persistencia en archivos JSON.
+- **Etapa 2**: migracion a MongoDB, ampliacion funcional del modulo de ventas y trabajo colaborativo por ramas con integracion centralizada.
 
 ---
 
 ## Tabla de Contenidos
 
-1. [Tecnologias Utilizadas](#tecnologias-utilizadas)
-2. [Arquitectura del Proyecto](#arquitectura-del-proyecto)
-3. [Estructura de Carpetas](#estructura-de-carpetas)
-4. [Requisitos Previos](#requisitos-previos)
-5. [Instalacion](#instalacion)
-6. [Configuracion](#configuracion)
-7. [Ejecucion](#ejecucion)
-8. [Rutas Disponibles](#rutas-disponibles)
-9. [API Endpoints](#api-endpoints)
-10. [Reglas de Negocio y Validaciones](#reglas-de-negocio-y-validaciones)
-11. [Modelos de Datos](#modelos-de-datos)
+1. [Estado Actual del Proyecto](#estado-actual-del-proyecto)
+2. [Tecnologias Utilizadas](#tecnologias-utilizadas)
+3. [Arquitectura](#arquitectura)
+4. [Migracion de Persistencia: JSON -> MongoDB](#migracion-de-persistencia-json---mongodb)
+5. [Modulos del Sistema](#modulos-del-sistema)
+6. [Etapa 2 - Trabajo por Ramas e Integracion](#etapa-2---trabajo-por-ramas-e-integracion)
+7. [Requisitos Previos](#requisitos-previos)
+8. [Instalacion](#instalacion)
+9. [Configuracion](#configuracion)
+10. [Ejecucion](#ejecucion)
+11. [Notas de Version](#notas-de-version)
+
+---
+
+## Estado Actual del Proyecto
+
+- Version del proyecto: **2.0.0**.
+- Persistencia activa: **MongoDB con Mongoose**.
+- Modulos principales activos:
+  - Productos
+  - Proveedores
+  - Clientes
+  - Comprobantes
+  - Pagos
+  - Cuenta corriente
+  - Ventas
+  - Login
 
 ---
 
 ## Tecnologias Utilizadas
 
-| Tecnologia  | Version | Proposito                       |
-| ----------- | ------- | ------------------------------- |
-| Node.js     | 18+     | Entorno de ejecucion            |
-| Express     | 5.x     | Framework HTTP                  |
-| Pug         | 3.x     | Motor de plantillas (vistas)    |
-| dotenv      | 16.x    | Gestion de variables de entorno |
-| fs.promises | Nativo  | Persistencia en archivos JSON   |
+| Tecnologia | Version | Proposito |
+| --- | --- | --- |
+| Node.js | 18+ | Entorno de ejecucion |
+| Express | 5.x | Framework HTTP |
+| Pug | 3.x | Motor de vistas |
+| dotenv | 17.x | Variables de entorno |
+| MongoDB | Atlas/local | Base de datos documental |
+| Mongoose | 9.x | ODM para MongoDB |
 
 ---
 
-## Arquitectura del Proyecto
+## Arquitectura
 
-El sistema implementa el patron **MVC (Modelo-Vista-Controlador)** estricto con Programacion Orientada a Objetos:
+Patron principal: **MVC** con clases por modulo.
 
+Flujo general:
+
+```text
+Request -> Routes -> Middlewares -> Controllers -> Managers (negocio) -> Schemas (Mongoose) -> MongoDB
 ```
-Request -> Routes -> Middlewares (validacion) -> Controllers (clases) -> Models (logica de negocio) -> FileSystemManager (persistencia)
-```
 
-- **Routes**: Definen los endpoints y aplican middlewares de validacion.
-- **Controllers**: Clases que reciben las peticiones HTTP y delegan al modelo.
-- **Models**: Clases que encapsulan la logica de negocio y reglas de validacion cruzada.
-- **Services**: Clase `FileSystemManager` que abstrae la lectura/escritura de archivos JSON, facilitando una futura migracion a base de datos.
-- **Middlewares**: Funciones de validacion de datos obligatorios y manejo global de errores.
-- **Views**: Plantillas Pug con layout base compartido.
+Capas:
+
+- **Routes**: exponen endpoints y aplican validaciones.
+- **Middlewares**: validacion de payload, ids y manejo global de errores.
+- **Controllers**: coordinan requests/responses.
+- **Managers**: reglas de negocio y relaciones entre modulos.
+- **Schemas**: definicion de entidades y persistencia en MongoDB.
+- **Views**: interfaz Pug para operacion web.
 
 ---
 
-## Estructura de Carpetas
+## Migracion de Persistencia: JSON -> MongoDB
 
-```
-LuminaCode/
-├── app.js                          # Punto de entrada de la aplicacion
-├── .env                            # Variables de entorno (no se sube al repositorio)
-├── .gitignore                      # Archivos excluidos del control de versiones
-├── package.json                    # Dependencias y scripts del proyecto
-├── README.md                       # Documentacion del proyecto
-└── src/
-    ├── controllers/
-    │   ├── ProductController.js    # Controlador de productos (clase)
-    │   └── ProviderController.js   # Controlador de proveedores (clase)
-    ├── data/
-    │   ├── productos.json          # Persistencia de productos
-    │   └── proveedores.json        # Persistencia de proveedores
-    ├── middlewares/
-    │   ├── errorHandler.js         # Manejo global de errores (400, 404, 500)
-    │   └── validators.js           # Validacion de campos obligatorios e IDs
-    ├── models/
-    │   ├── ProductManager.js       # Modelo de productos (logica de negocio)
-    │   └── ProviderManager.js      # Modelo de proveedores (logica de negocio)
-    ├── routes/
-    │   ├── productRoutes.js        # Rutas del modulo productos
-    │   └── providerRoutes.js       # Rutas del modulo proveedores
-    ├── services/
-    │   └── FileSystemManager.js    # Clase de persistencia en archivos JSON
-    └── views/
-        ├── error.pug               # Vista de errores
-        ├── index.pug               # Pagina de inicio
-        ├── layout.pug              # Layout base (header, nav, estilos)
-        ├── products/
-        │   ├── create.pug          # Formulario de creacion de producto
-        │   ├── detail.pug          # Detalle de un producto
-        │   ├── edit.pug            # Formulario de edicion de producto
-        │   └── index.pug           # Listado de productos
-        └── providers/
-            ├── create.pug          # Formulario de creacion de proveedor
-            ├── detail.pug          # Detalle de un proveedor
-            ├── edit.pug            # Formulario de edicion de proveedor
-            └── index.pug           # Listado de proveedores
-```
+### Situacion inicial (Etapa 1)
+
+- Persistencia basada en archivos JSON (`src/data/*.json`).
+- Servicio `FileSystemManager` para lectura/escritura.
+- IDs numericos y validaciones orientadas a archivos.
+
+### Situacion actual (Etapa 2)
+
+- Persistencia migrada a MongoDB.
+- Conexion centralizada en `src/config/db.js`.
+- Entidades modeladas con schemas Mongoose:
+  - `productSchema`
+  - `providerSchema`
+  - `clientSchema`
+  - `comprobanteClienteSchema`
+  - `pagosClienteSchema`
+  - `ccorrienteClienteSchema`
+- IDs migrados a `ObjectId`.
+- Managers actualizados para operar con `find`, `findById`, `save`, `populate`, etc.
+
+### Impacto funcional de la migracion
+
+- Mayor consistencia de datos relacionales entre modulos.
+- Mejor escalabilidad respecto al esquema basado en archivos.
+- Preparacion para trabajo colaborativo concurrente con menor riesgo de colision en datos.
+
+---
+
+## Modulos del Sistema
+
+- **Productos y Proveedores**: CRUD completo, validaciones de relacion y stock.
+- **Clientes**: alta, baja, modificacion y consulta.
+- **Comprobantes**: facturas/notas con impacto en cuenta corriente.
+- **Pagos**: registro de pagos de clientes.
+- **Cuenta corriente**: movimientos debito/credito y saldo acumulado por cliente.
+- **Ventas**: acceso central a operaciones comerciales.
+- **Login**: punto de entrada al sistema.
+
+---
+
+## Etapa 2 - Trabajo por Ramas e Integracion
+
+En la segunda etapa se trabajo por ramas y luego se consolido todo en una rama de integracion.
+
+### Ramas del equipo integradas
+
+- `Agus`
+- `rama_luis`
+- `vale-mongodb-productos`
+- `Marcos`
+
+### Aportes principales por rama
+
+#### Rama `Agus`
+
+- Commit de referencia: `4a10480`.
+- Foco: **conexion a MongoDB y base de migracion**.
+- Cambios clave:
+  - conexion de app a base de datos
+  - incorporacion/ajuste de schemas y managers de productos/proveedores
+  - actualizacion de dependencias para MongoDB/Mongoose
+
+#### Rama `rama_luis`
+
+- Foco: **consolidacion de migracion en productos/proveedores**.
+- Cambios clave:
+  - ajustes en `app.js` para flujo con Mongo
+  - normalizacion de `src/config/db.js`
+  - ajustes de managers y schemas de productos/proveedores
+
+#### Rama `vale-mongodb-productos`
+
+- Foco: **alineacion final de arranque y persistencia en modulo de productos**.
+- Cambio visible en integracion: ajuste de `app.js` para asegurar el flujo de inicio con MongoDB.
+
+#### Rama `Marcos`
+
+- Foco: **facturacion tipo punto de venta y mejoras en comprobantes**.
+- Cambios clave:
+  - facturacion para cliente registrado y consumidor final
+  - carga de items (producto, cantidad, subtotal)
+  - calculo automatico de total
+  - ajuste de stock en facturacion
+  - cuenta corriente solo para clientes registrados
+  - actualizacion de validaciones, schemas, manager, controller y vistas de comprobantes
+
+### Trabajo de integracion (rama `integracion/equipo-completo`)
+
+- Se creo una rama dedicada para unir cambios sin impactar directamente en `main`.
+- Se ejecutaron merges por rama, resolucion de conflictos y validaciones posteriores.
+- Se genero PR desde `Marcos` hacia `integracion/equipo-completo` y se aplico merge squash.
+- Resultado: consolidacion de Etapa 2 con persistencia MongoDB y mejoras funcionales de ventas/facturacion.
 
 ---
 
 ## Requisitos Previos
 
-- **Node.js** version 18.0 o superior.
-- **npm** (incluido con Node.js).
-- Un navegador web moderno o herramienta como Postman/cURL para probar la API.
+- Node.js 18 o superior.
+- npm.
+- Instancia MongoDB (Atlas o local).
 
 ---
 
 ## Instalacion
 
-1. Clonar el repositorio:
-
 ```bash
 git clone <URL_DEL_REPOSITORIO>
 cd LuminaCode
-```
-
-2. Instalar las dependencias:
-
-```bash
 npm install
 ```
 
@@ -125,166 +194,73 @@ npm install
 
 ## Configuracion
 
-El proyecto utiliza variables de entorno para los datos de configuracion. Crear un archivo `.env` en la raiz del proyecto con el siguiente contenido:
+Crear `.env` en la raiz del proyecto:
 
 ```env
 PORT=3000
 NODE_ENV=development
+MONGODB_URI=mongodb+srv://<usuario>:<password>@<cluster>/<database>?retryWrites=true&w=majority
 ```
 
-El archivo `.env` esta incluido en `.gitignore` y no se sube al repositorio por razones de seguridad.
+Notas:
+
+- `MONGODB_URI` es obligatorio para iniciar.
+- `.env` no se sube al repositorio.
 
 ---
 
 ## Ejecucion
 
-### Modo Produccion
-
-```bash
-npm start
-```
-
-### Modo Desarrollo (auto-reload al guardar cambios)
+Modo desarrollo:
 
 ```bash
 npm run dev
 ```
 
-Una vez iniciado, el servidor estara disponible en:
+Modo produccion:
 
+```bash
+npm start
 ```
+
+URL local por defecto:
+
+```text
 http://localhost:3000
 ```
 
 ---
 
-## Rutas Disponibles
+## Notas de Version
 
-### Navegacion Web (Vistas HTML)
+### Etapa 1
 
-| Ruta                          | Descripcion                         |
-| ----------------------------- | ----------------------------------- |
-| `GET /`                       | Pagina de inicio                    |
-| `GET /productos`              | Listado de todos los productos      |
-| `GET /productos/crear`        | Formulario para crear un producto   |
-| `GET /productos/:id`          | Detalle de un producto especifico   |
-| `GET /productos/:id/editar`   | Formulario para editar un producto  |
-| `GET /proveedores`            | Listado de todos los proveedores    |
-| `GET /proveedores/crear`      | Formulario para crear un proveedor  |
-| `GET /proveedores/:id`        | Detalle de un proveedor especifico  |
-| `GET /proveedores/:id/editar` | Formulario para editar un proveedor |
+- Base MVC inicial.
+- CRUD de productos/proveedores.
+- Persistencia en JSON.
 
----
+### Etapa 2
 
-## API Endpoints
+- Migracion de persistencia a MongoDB/Mongoose.
+- Incorporacion de modulos comerciales (clientes, comprobantes, pagos, cuenta corriente, ventas).
+- Integracion colaborativa por ramas.
+- Consolidacion en rama de integracion para estabilizacion previa a `main`.
 
-Las mismas rutas funcionan como API REST cuando se envian peticiones con el header `Accept: application/json`.
+### Changelog tecnico (Etapa 2)
 
-### Productos
-
-| Metodo | Ruta             | Descripcion                              | Codigo de exito |
-| ------ | ---------------- | ---------------------------------------- | --------------- |
-| GET    | `/productos`     | Listar productos con datos del proveedor | 200             |
-| GET    | `/productos/:id` | Obtener producto por ID con proveedor    | 200             |
-| POST   | `/productos`     | Crear un nuevo producto                  | 201             |
-| PUT    | `/productos/:id` | Actualizar un producto existente         | 200             |
-| DELETE | `/productos/:id` | Eliminar un producto                     | 200             |
-
-### Proveedores
-
-| Metodo | Ruta               | Descripcion                                      | Codigo de exito |
-| ------ | ------------------ | ------------------------------------------------ | --------------- |
-| GET    | `/proveedores`     | Listar todos los proveedores                     | 200             |
-| GET    | `/proveedores/:id` | Obtener proveedor por ID con productos asociados | 200             |
-| POST   | `/proveedores`     | Crear un nuevo proveedor                         | 201             |
-| PUT    | `/proveedores/:id` | Actualizar un proveedor existente                | 200             |
-| DELETE | `/proveedores/:id` | Eliminar un proveedor                            | 200             |
-
-### Ejemplo de uso con cURL
-
-Crear un producto:
-
-```bash
-curl -X POST http://localhost:3000/productos \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/json" \
-  -d '{"nombre":"Lavandina x 5L","descripcion":"Concentrada","precio":1250.50,"stock":200,"proveedorId":1}'
-```
-
-Listar productos:
-
-```bash
-curl http://localhost:3000/productos -H "Accept: application/json"
-```
-
-Eliminar un proveedor:
-
-```bash
-curl -X DELETE http://localhost:3000/proveedores/1 -H "Accept: application/json"
-```
-
----
-
-## Reglas de Negocio y Validaciones
-
-### Validacion de campos obligatorios
-
-- **Producto**: nombre (string), precio (numero >= 0), stock (numero >= 0), proveedorId (numero).
-- **Proveedor**: nombre (string), contacto (string), telefono (string), email (string).
-
-### Validaciones cruzadas entre modulos
-
-1. **Creacion de Producto**: Al crear o actualizar un producto, se verifica que el `proveedorId` corresponda a un proveedor existente en `proveedores.json`. Si no existe, se retorna un error `400 Bad Request`.
-
-2. **Eliminacion de Proveedor**: Antes de eliminar un proveedor, se verifica que no tenga productos asociados en `productos.json`. Si existen productos vinculados, se retorna un error `400 Bad Request` indicando la cantidad de productos asociados.
-
-3. **Validacion de ID**: Todos los parametros `:id` en las rutas se validan como numeros enteros positivos mediante middleware.
-
-### Codigos HTTP utilizados
-
-| Codigo | Significado           | Uso                                             |
-| ------ | --------------------- | ----------------------------------------------- |
-| 200    | OK                    | Operacion exitosa                               |
-| 201    | Created               | Recurso creado correctamente                    |
-| 400    | Bad Request           | Datos invalidos o violacion de regla de negocio |
-| 404    | Not Found             | Recurso no encontrado                           |
-| 500    | Internal Server Error | Error no controlado del servidor                |
-
----
-
-## Modelos de Datos
-
-### Producto
-
-```json
-{
-  "id": 1,
-  "nombre": "Lavandina Concentrada x 5L",
-  "descripcion": "Lavandina concentrada apta para uso industrial",
-  "precio": 1250.5,
-  "stock": 200,
-  "proveedorId": 1
-}
-```
-
-### Proveedor
-
-```json
-{
-  "id": 1,
-  "nombre": "Limpieza Total S.R.L.",
-  "contacto": "Juan Perez",
-  "telefono": "011-4555-1234",
-  "email": "ventas@limpiezatotal.com",
-  "direccion": "Av. Corrientes 1234, CABA"
-}
-```
+| Fecha | Commit | Autor | Descripcion |
+| --- | --- | --- | --- |
+| 2026-05-20 | `4a10480` | AgustinaBran | conexion a mongodb |
+| 2026-05-22 | `c8beb3a` | Marcos Martin | merge: Agus en integracion |
+| 2026-05-22 | `54f348a` | Marcos Martin | merge: rama_luis en integracion |
+| 2026-05-22 | `4930323` | Marcos Martin | merge: vale-mongodb-productos en integracion |
+| 2026-05-22 | `e33162a` | Marcos Martin | feat(comprobantes): facturacion POS para cliente y consumidor final (#2) |
 
 ---
 
 ## Autor
 
-Proyecto desarrollado como trabajo practico para la Tecnicatura en Desarrollo de Software - Desarrollo Web Backend.
+Proyecto academico para la Tecnicatura en Desarrollo de Software.
 
 ---
 
