@@ -4,7 +4,7 @@ block content
   .detail-header
     div
       h2 #{comprobante.tipo.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Nro. #{comprobante.numero}
-      p.muted Cliente: #{comprobante.clienteId ? comprobante.clienteId.nombre : '-'}
+      p.muted Receptor: #{comprobante.clienteId ? comprobante.clienteId.nombre : (comprobante.receptorNombre || 'Consumidor Final')}
     .actions
       a.btn.btn-warning(href=`/comprobantes/${comprobante.id}/editar`) Editar
       form.inline(action=`/comprobantes/${comprobante.id}?_method=DELETE` method="POST")
@@ -29,6 +29,26 @@ block content
           span.label Descripción
           span.value #{comprobante.descripcion}
 
+  if comprobante.items && comprobante.items.length > 0
+    .data-panel(style="margin-top:1rem")
+      h3(style="margin-bottom:0.75rem") Detalle de venta
+      .table-wrap
+        table
+          thead
+            tr
+              th Producto
+              th Cantidad
+              th Precio Unitario
+              th Subtotal
+          tbody
+            each item in comprobante.items
+              tr
+                td #{item.productoNombre}
+                td #{item.cantidad}
+                td $#{Number(item.precioUnitario).toFixed(2)}
+                td $#{Number(item.subtotal).toFixed(2)}
+
   .top-bar(style="margin-top:1rem")
-    a.btn.btn-primary(href=(comprobante.clienteId ? `/cuenta/${comprobante.clienteId.id}` : '/comprobantes')) Ver Cuenta Corriente del Cliente
+    if comprobante.clienteId
+      a.btn.btn-primary(href=`/cuenta/${comprobante.clienteId.id}`) Ver Cuenta Corriente del Cliente
     a.btn(href="/comprobantes") Volver al listado
