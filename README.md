@@ -63,23 +63,36 @@ LuminaCode/
 ├── package.json                    # Dependencias y scripts del proyecto
 ├── README.md                       # Documentacion del proyecto
 └── src/
+    ├── config/
+    │   └── db.js                   # Conexion centralizada MongoDB/Mongoose
+    │
     ├── controllers/
     │   ├── ProductController.js    # Controlador de productos (clase)
     │   └── ProviderController.js   # Controlador de proveedores (clase)
+    │
     ├── data/
-    │   ├── productos.json          # Persistencia de productos
-    │   └── proveedores.json        # Persistencia de proveedores
+    │   ├── productos.json          # Persistencia legacy previa a MongoDB
+    │   └── proveedores.json        # Persistencia legacy previa a MongoDB
+    │
     ├── middlewares/
     │   ├── errorHandler.js         # Manejo global de errores (400, 404, 500)
     │   └── validators.js           # Validacion de campos obligatorios e IDs
+    │
     ├── models/
     │   ├── ProductManager.js       # Modelo de productos (logica de negocio)
     │   └── ProviderManager.js      # Modelo de proveedores (logica de negocio)
+    │
     ├── routes/
     │   ├── productRoutes.js        # Rutas del modulo productos
     │   └── providerRoutes.js       # Rutas del modulo proveedores
+    │
+    ├── schemas/
+    │   ├── productSchema.js        # Schema Mongoose de productos
+    │   └── providerSchema.js       # Schema Mongoose de proveedores
+    │
     ├── services/
-    │   └── FileSystemManager.js    # Clase de persistencia en archivos JSON
+    │   └── FileSystemManager.js    # Servicio legacy de persistencia JSON
+    │
     └── views/
         ├── error.pug               # Vista de errores
         ├── index.pug               # Pagina de inicio
@@ -89,6 +102,7 @@ LuminaCode/
         │   ├── detail.pug          # Detalle de un producto
         │   ├── edit.pug            # Formulario de edicion de producto
         │   └── index.pug           # Listado de productos
+        │
         └── providers/
             ├── create.pug          # Formulario de creacion de proveedor
             ├── detail.pug          # Detalle de un proveedor
