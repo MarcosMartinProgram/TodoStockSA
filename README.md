@@ -41,13 +41,13 @@ Proyecto desarrollado como entrega parcial para la materia **Desarrollo Web Back
 El sistema implementa el patron **MVC (Modelo-Vista-Controlador)** estricto con Programacion Orientada a Objetos:
 
 ```
-Request -> Routes -> Middlewares (validacion) -> Controllers (clases) -> Models (logica de negocio) -> FileSystemManager (persistencia)
+Request -> Routes -> Middlewares (validacion) -> Controllers (clases) -> Models (logica de negocio) -> MongoDB/Mongoose (persistencia)
 ```
 
 - **Routes**: Definen los endpoints y aplican middlewares de validacion.
 - **Controllers**: Clases que reciben las peticiones HTTP y delegan al modelo.
-- **Models**: Clases que encapsulan la logica de negocio y reglas de validacion cruzada.
-- **Services**: Clase `FileSystemManager` que abstrae la lectura/escritura de archivos JSON, facilitando una futura migracion a base de datos.
+- **Models**: Clases que encapsulan la logica de negocio y gestionan operaciones CRUD utilizando Mongoose y MongoDB.
+- **Config**: Manejo centralizado de conexion MongoDB mediante Mongoose.
 - **Middlewares**: Funciones de validacion de datos obligatorios y manejo global de errores.
 - **Views**: Plantillas Pug con layout base compartido.
 
