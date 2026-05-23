@@ -275,20 +275,21 @@ curl -X DELETE http://localhost:3000/proveedores/1 -H "Accept: application/json"
 
 ```json
 {
-  "id": 1,
+  "_id": "682f1d7c8b5f9e001f3b2a11",
   "nombre": "Lavandina Concentrada x 5L",
   "descripcion": "Lavandina concentrada apta para uso industrial",
   "precio": 1250.5,
   "stock": 200,
-  "proveedorId": 1
+  "proveedorId": "682f1d7c8b5f9e001f3b2a10"
 }
 ```
+
 
 ### Proveedor
 
 ```json
 {
-  "id": 1,
+  "_id": "682f1d7c8b5f9e001f3b2a10",
   "nombre": "Limpieza Total S.R.L.",
   "contacto": "Juan Perez",
   "telefono": "011-4555-1234",
@@ -298,10 +299,41 @@ curl -X DELETE http://localhost:3000/proveedores/1 -H "Accept: application/json"
 ```
 
 ---
+## Migracion a MongoDB
+
+El sistema fue migrado progresivamente desde persistencia basada en archivos JSON hacia MongoDB utilizando Mongoose como ODM (Object Data Modeling).
+
+La integracion incluyo:
+
+- Configuracion centralizada de conexion MongoDB.
+- Implementacion de schemas Mongoose.
+- Adaptacion progresiva de managers y operaciones CRUD.
+- Incorporacion de variables de entorno mediante dotenv.
+- Compatibilizacion de relaciones entre productos y proveedores mediante ObjectId.
+
+Esta migracion permitio mejorar la escalabilidad, mantenibilidad y organizacion del backend.
+
+---
 
 ## Autor
 
 Proyecto desarrollado como trabajo practico para la Tecnicatura en Desarrollo de Software - Desarrollo Web Backend.
+
+---
+
+## Integracion y Trabajo Colaborativo
+
+Durante el desarrollo del proyecto se trabajó mediante ramas Git independientes y procesos de integracion colaborativa utilizando GitHub.
+
+Principales tareas realizadas:
+
+- Implementacion de arquitectura MVC.
+- Desarrollo de CRUDs completos para entidades del sistema.
+- Migracion progresiva desde persistencia JSON hacia MongoDB/Mongoose.
+- Integracion de schemas y managers utilizando Mongoose.
+- Desarrollo de vistas Pug y validaciones middleware.
+- Documentacion tecnica y configuracion de entorno.
+- Resolucion de conflictos e integracion de ramas del equipo.
 
 ---
 
