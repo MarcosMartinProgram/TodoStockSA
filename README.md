@@ -31,9 +31,9 @@ Proyecto desarrollado como entrega parcial para la materia **Desarrollo Web Back
 | Node.js     | 18+     | Entorno de ejecucion            |
 | Express     | 5.x     | Framework HTTP                  |
 | Pug         | 3.x     | Motor de plantillas (vistas)    |
-| dotenv      | 16.x    | Gestion de variables de entorno |
-| fs.promises | Nativo  | Persistencia en archivos JSON   |
-
+| dotenv      | 17.x    | Gestion de variables de entorno |
+| MongoDB     | 7.x     | Base de datos NoSQL             |
+| Mongoose    | 9.x     | ODM para MongoDB                |
 ---
 
 ## Arquitectura del Proyecto
