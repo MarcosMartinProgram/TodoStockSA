@@ -116,6 +116,8 @@ LuminaCode/
 
 - **Node.js** version 18.0 o superior.
 - **npm** (incluido con Node.js).
+- **MongoDB Community Server 7.x** instalado y en ejecucion.
+- **MongoDB Compass** (opcional, recomendado para visualizar la base de datos).
 - Un navegador web moderno o herramienta como Postman/cURL para probar la API.
 
 ---
