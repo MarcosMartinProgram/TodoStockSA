@@ -144,6 +144,7 @@ El proyecto utiliza variables de entorno para los datos de configuracion. Crear 
 ```env
 PORT=3000
 NODE_ENV=development
+MONGODB_URI=mongodb://localhost:27017/todostockdb
 ```
 
 El archivo `.env` esta incluido en `.gitignore` y no se sube al repositorio por razones de seguridad.
