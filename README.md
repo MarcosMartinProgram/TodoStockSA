@@ -285,6 +285,189 @@ Para ingresar al login en entorno de prueba:
 
 ---
 
+## Estructura del proyecto
+
+```
+TodoStockSA/
+├── app.js
+├── src/
+│   ├── config/
+│   │   └── db.js
+│   ├── controllers/
+│   │   ├── LoginController.js
+│   │   ├── ProductController.js
+│   │   ├── ProviderController.js
+│   │   ├── ClientController.js
+│   │   ├── ComprobanteClienteController.js
+│   │   ├── PagosClienteController.js
+│   │   └── CcorrienteClienteController.js
+│   ├── middlewares/
+│   │   ├── validators.js
+│   │   └── errorHandler.js
+│   ├── models/
+│   │   ├── ProductManager.js
+│   │   ├── ProviderManager.js
+│   │   ├── ClientManager.js
+│   │   ├── ComprobanteClienteManager.js
+│   │   ├── PagosClienteManager.js
+│   │   └── CcorrienteClienteManager.js
+│   ├── routes/
+│   │   ├── loginRoutes.js
+│   │   ├── ventasRoutes.js
+│   │   ├── productRoutes.js
+│   │   ├── providerRoutes.js
+│   │   ├── clientRoutes.js
+│   │   ├── comprobanteClienteRoutes.js
+│   │   ├── pagosClienteRoutes.js
+│   │   └── ccorrienteClienteRoutes.js
+│   ├── schemas/
+│   │   ├── productSchema.js
+│   │   ├── providerSchema.js
+│   │   ├── clientSchema.js
+│   │   ├── comprobanteClienteSchema.js
+│   │   ├── pagosClienteSchema.js
+│   │   └── ccorrienteClienteSchema.js
+│   └── views/
+│       ├── layout.pug
+│       ├── index.pug
+│       ├── login/
+│       ├── ventas/
+│       ├── products/
+│       ├── providers/
+│       ├── clients/
+│       ├── comprobantecliente/
+│       ├── pagoscliente/
+│       └── ccorrientecliente/
+```
+
+---
+
+## Rutas del sistema
+
+> Los parámetros de ruta se indican con `:nombre`.
+> PUT y DELETE se envían desde formularios HTML usando `?_method=PUT` / `?_method=DELETE`.
+
+### Login
+
+| Método | Ruta | Descripción | Middleware |
+|--------|------|-------------|------------|
+| GET | `/login` | Muestra el formulario de acceso | — |
+| POST | `/login` | Valida credenciales y redirige a `/inicio` | — |
+
+---
+
+### Navegación
+
+| Método | Ruta | Descripción | Middleware |
+|--------|------|-------------|------------|
+| GET | `/` | Redirige automáticamente a `/login` | — |
+| GET | `/inicio` | Menú principal con accesos a los módulos | — |
+| GET | `/ventas` | Submenú del módulo de ventas | — |
+
+---
+
+### Productos
+
+| Método | Ruta | Descripción | Middleware |
+|--------|------|-------------|------------|
+| GET | `/productos` | Listado de productos con proveedor | — |
+| GET | `/productos/crear` | Formulario de alta | — |
+| GET | `/productos/:id` | Detalle del producto | `validateId` |
+| GET | `/productos/:id/editar` | Formulario de edición | `validateId` |
+| POST | `/productos` | Crear nuevo producto | `validateProduct` |
+| PUT | `/productos/:id` | Actualizar producto | `validateId` |
+| DELETE | `/productos/:id` | Eliminar producto | `validateId` |
+
+---
+
+### Proveedores
+
+> No se puede eliminar un proveedor que tenga productos asociados.
+
+| Método | Ruta | Descripción | Middleware |
+|--------|------|-------------|------------|
+| GET | `/proveedores` | Listado de proveedores | — |
+| GET | `/proveedores/crear` | Formulario de alta | — |
+| GET | `/proveedores/:id` | Detalle con productos asociados | `validateId` |
+| GET | `/proveedores/:id/editar` | Formulario de edición | `validateId` |
+| POST | `/proveedores` | Crear nuevo proveedor | `validateProvider` |
+| PUT | `/proveedores/:id` | Actualizar proveedor | `validateId` |
+| DELETE | `/proveedores/:id` | Eliminar proveedor | `validateId` |
+
+---
+
+### Clientes
+
+| Método | Ruta | Descripción | Middleware |
+|--------|------|-------------|------------|
+| GET | `/clientes` | Listado de clientes | — |
+| GET | `/clientes/crear` | Formulario de alta | — |
+| GET | `/clientes/:id` | Detalle con saldo actual | `validateId` |
+| GET | `/clientes/:id/editar` | Formulario de edición | `validateId` |
+| POST | `/clientes` | Crear nuevo cliente | `validateClient` |
+| PUT | `/clientes/:id` | Actualizar cliente | `validateId` |
+| DELETE | `/clientes/:id` | Eliminar cliente | `validateId` |
+
+---
+
+### Comprobantes de Venta
+
+> Al crear o eliminar un comprobante se actualiza automáticamente la cuenta corriente del cliente.
+
+| Método | Ruta | Descripción | Middleware |
+|--------|------|-------------|------------|
+| GET | `/comprobantes` | Listado de comprobantes | — |
+| GET | `/comprobantes/crear` | Formulario de alta (acepta `?clienteId`) | — |
+| GET | `/comprobantes/:id` | Detalle del comprobante | `validateId` |
+| GET | `/comprobantes/:id/editar` | Formulario de edición | `validateId` |
+| POST | `/comprobantes` | Crear comprobante y movimiento en cta. cte. | `validateVoucher` |
+| PUT | `/comprobantes/:id` | Actualizar comprobante | `validateId` |
+| DELETE | `/comprobantes/:id` | Eliminar comprobante y su movimiento | `validateId` |
+
+---
+
+### Pagos
+
+> Al crear o eliminar un pago se actualiza automáticamente la cuenta corriente del cliente.
+
+| Método | Ruta | Descripción | Middleware |
+|--------|------|-------------|------------|
+| GET | `/pagos` | Listado de pagos | — |
+| GET | `/pagos/crear` | Formulario de alta (acepta `?clienteId`) | — |
+| GET | `/pagos/:id` | Detalle del pago | `validateId` |
+| GET | `/pagos/:id/editar` | Formulario de edición | `validateId` |
+| POST | `/pagos` | Registrar pago y movimiento en cta. cte. | `validatePayment` |
+| PUT | `/pagos/:id` | Actualizar pago | `validateId` |
+| DELETE | `/pagos/:id` | Eliminar pago y su movimiento | `validateId` |
+
+---
+
+### Cuenta Corriente
+
+> Vista de solo consulta. Se alimenta automáticamente desde Comprobantes y Pagos.
+
+| Método | Ruta | Descripción | Middleware |
+|--------|------|-------------|------------|
+| GET | `/cuenta/:clienteId` | Movimientos y saldo acumulado del cliente | `validateClienteId` |
+
+---
+
+## Resumen de rutas por módulo
+
+| Módulo | GET | POST | PUT | DELETE | Total |
+|--------|:---:|:----:|:---:|:------:|:-----:|
+| Login | 1 | 1 | 0 | 0 | 2 |
+| Navegación | 3 | 0 | 0 | 0 | 3 |
+| Productos | 4 | 1 | 1 | 1 | 7 |
+| Proveedores | 4 | 1 | 1 | 1 | 7 |
+| Clientes | 4 | 1 | 1 | 1 | 7 |
+| Comprobantes | 4 | 1 | 1 | 1 | 7 |
+| Pagos | 4 | 1 | 1 | 1 | 7 |
+| Cuenta Corriente | 1 | 0 | 0 | 0 | 1 |
+| **Total** | **25** | **6** | **5** | **5** | **41** |
+
+---
+
 ## Autor
 
 Proyecto academico para la Tecnicatura en Desarrollo de Software.
