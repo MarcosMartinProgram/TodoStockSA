@@ -104,6 +104,14 @@ Capas:
 - Mayor consistencia de datos relacionales entre modulos.
 - Mejor escalabilidad respecto al esquema basado en archivos.
 - Preparacion para trabajo colaborativo concurrente con menor riesgo de colision en datos.
+- Identificadores estandarizados como `ObjectId` en MongoDB (campo `_id`) en lugar de IDs numericos secuenciales.
+
+### Estructura tecnica clave en Etapa 2
+
+- `src/config/db.js`: conexion centralizada a MongoDB.
+- `src/schemas/`: definicion de entidades con Mongoose.
+- `src/models/`: reglas de negocio y operaciones CRUD con Mongoose.
+- `src/data/` y `src/services/FileSystemManager.js`: componentes legacy de la etapa JSON (referencia historica/migracion).
 
 ---
 
@@ -179,6 +187,7 @@ En la segunda etapa se trabajo por ramas y luego se consolido todo en una rama d
 - Node.js 18 o superior.
 - npm.
 - Instancia MongoDB (Atlas o local).
+- MongoDB Compass (opcional, recomendado para inspeccion de colecciones/documentos).
 
 ---
 
@@ -205,6 +214,12 @@ Crear `.env` en la raiz del proyecto:
 PORT=3000
 NODE_ENV=development
 MONGODB_URI=mongodb+srv://<usuario>:<password>@<cluster>/<database>?retryWrites=true&w=majority
+```
+
+Ejemplo alternativo para entorno local:
+
+```env
+MONGODB_URI=mongodb://localhost:27017/todostockdb
 ```
 
 Notas:
