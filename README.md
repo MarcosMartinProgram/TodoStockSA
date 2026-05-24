@@ -293,7 +293,6 @@ Proyecto academico para la Tecnicatura en Desarrollo de Software.
 
 ## Licencia
 
-M
 Empresa de Desarrollo LUMINA CODE ( grupo 18 )
 Brandemann, Agustina
 Martin, Marcos
