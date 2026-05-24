@@ -1,0 +1,140 @@
+extends ../layout
+
+block content
+  .form-container
+    h2 Nuevo Comprobante / Punto de Venta
+    form(action="/comprobantes" method="POST")
+      .form-group
+        label(for="receptorTipo") Facturar a *
+        select#receptorTipo(name="receptorTipo" required)
+          option(value="cliente" selected=(clienteIdPresel ? true : false)) Cliente registrado
+          option(value="consumidor_final" selected=(!clienteIdPresel)) Consumidor Final
+      .form-group
+        label(for="clienteId") Cliente *
+        select#clienteId(name="clienteId" required)
+          option(value="") Seleccione un cliente...
+          each cliente in clientes
+            option(value=cliente.id selected=(clienteIdPresel && clienteIdPresel === cliente.id)) #{cliente.nombre} (#{cliente.cuit})
+      .form-group#receptorNombreGroup(style="display:none")
+        label(for="receptorNombre") Nombre para ticket
+        input#receptorNombre(type="text" name="receptorNombre" value="Consumidor Final" placeholder="Consumidor Final")
+      .form-group
+        label(for="tipo") Tipo de Comprobante *
+        select#tipo(name="tipo" required)
+          option(value="factura") Factura
+          option(value="nota_debito") Nota de Débito
+          option(value="nota_credito") Nota de Crédito
+      .form-group
+        label(for="numero") Número *
+        input#numero(type="text" name="numero" required placeholder="Ej: 0001-00012345")
+      .form-group
+        label(for="fecha") Fecha *
+        input#fecha(type="date" name="fecha" required)
+
+      h3(style="margin-top:1.25rem") Detalle de productos
+      p.muted(style="margin-bottom:0.8rem") Agregá uno o varios productos. El importe se calcula automáticamente.
+      #itemsContainer
+      .hero-actions(style="margin-bottom:1rem")
+        button.btn.btn-primary#addItem(type="button") + Agregar producto
+
+      .form-group
+        label(for="importe") Total *
+        input#importe(type="number" name="importe" required min="0.01" step="0.01" placeholder="0.00" readonly)
+      .form-group
+        label(for="descripcion") Descripción
+        input#descripcion(type="text" name="descripcion" placeholder="Descripción opcional")
+      .form-actions
+        button.btn.btn-success(type="submit") Guardar Comprobante
+        a.btn(href="/comprobantes") Cancelar
+
+    template#itemTemplate
+      .data-panel.item-row(style="margin-bottom:0.75rem")
+        .form-group
+          label Producto *
+          select(name="productoId" required)
+            option(value="") Seleccione un producto...
+            each producto in productos
+              option(value=producto.id data-precio=producto.precio data-stock=producto.stock) #{producto.nombre} ($#{Number(producto.precio).toFixed(2)}) - Stock: #{producto.stock}
+        .form-group
+          label Cantidad *
+          input(type="number" name="cantidad" min="1" step="1" value="1" required)
+        .form-group
+          label Subtotal
+          input.itemSubtotal(type="text" readonly value="$0.00")
+        .form-actions
+          button.btn.btn-danger.removeItem(type="button") Quitar
+
+  script.
+    (function () {
+      const receptorTipoEl = document.getElementById('receptorTipo');
+      const clienteEl = document.getElementById('clienteId');
+      const receptorNombreGroup = document.getElementById('receptorNombreGroup');
+      const receptorNombreEl = document.getElementById('receptorNombre');
+      const itemsContainer = document.getElementById('itemsContainer');
+      const addItemButton = document.getElementById('addItem');
+      const itemTemplate = document.getElementById('itemTemplate');
+      const totalEl = document.getElementById('importe');
+
+      function setReceiverMode() {
+        const isCliente = receptorTipoEl.value === 'cliente';
+        clienteEl.required = isCliente;
+        clienteEl.disabled = !isCliente;
+        if (!isCliente) {
+          clienteEl.value = '';
+        }
+        receptorNombreGroup.style.display = isCliente ? 'none' : 'block';
+        receptorNombreEl.required = !isCliente;
+      }
+
+      function recalculateTotal() {
+        const rows = itemsContainer.querySelectorAll('.item-row');
+        let total = 0;
+
+        rows.forEach((row) => {
+          const productSelect = row.querySelector('select[name="productoId"]');
+          const qtyInput = row.querySelector('input[name="cantidad"]');
+          const subtotalInput = row.querySelector('.itemSubtotal');
+
+          const selected = productSelect.options[productSelect.selectedIndex];
+          const precio = selected && selected.dataset && selected.dataset.precio ? Number(selected.dataset.precio) : 0;
+          const stock = selected && selected.dataset && selected.dataset.stock ? Number(selected.dataset.stock) : 0;
+          let qty = Number(qtyInput.value || 0);
+
+          if (qty > stock && stock > 0) {
+            qty = stock;
+            qtyInput.value = String(stock);
+          }
+
+          const subtotal = precio * qty;
+          total += subtotal;
+          subtotalInput.value = '$' + subtotal.toFixed(2);
+        });
+
+        totalEl.value = total > 0 ? total.toFixed(2) : '';
+      }
+
+      function addItem() {
+        const fragment = itemTemplate.content.cloneNode(true);
+        const row = fragment.querySelector('.item-row');
+        const removeBtn = row.querySelector('.removeItem');
+        const select = row.querySelector('select[name="productoId"]');
+        const qtyInput = row.querySelector('input[name="cantidad"]');
+
+        removeBtn.addEventListener('click', function () {
+          row.remove();
+          recalculateTotal();
+        });
+
+        select.addEventListener('change', recalculateTotal);
+        qtyInput.addEventListener('input', recalculateTotal);
+
+        itemsContainer.appendChild(fragment);
+        recalculateTotal();
+      }
+
+      receptorTipoEl.addEventListener('change', setReceiverMode);
+      addItemButton.addEventListener('click', addItem);
+
+      setReceiverMode();
+      addItem();
+    })();

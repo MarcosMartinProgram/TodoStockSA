@@ -1,0 +1,40 @@
+extends ../layout
+
+block content
+  section.section-banner
+    .section-copy
+      span.eyebrow Módulo de ventas
+      h2 Ventas
+      p.
+        Gestioná clientes, emití comprobantes y registrá cobros. Todo desde un único módulo integrado.
+      .kpi-row
+        span.chip Clientes
+        span.chip Comprobantes
+        span.chip Pagos
+    .section-media(style="background-image: url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=80');")
+
+  section.feature-grid
+    article.feature-card
+      span.eyebrow Cartera
+      h3 Clientes
+      p Alta, baja y modificación de clientes. Consultá el estado de cuenta corriente de cada uno.
+      .hero-actions
+        a.btn.btn-primary(href="/clientes") Ver clientes
+        a.btn.btn-success(href="/clientes/crear") + Nuevo
+    article.feature-card
+      span.eyebrow Facturación
+      h3 Comprobantes
+      p Registrá facturas, notas de crédito y notas de débito. Se reflejan automáticamente en la cuenta corriente.
+      .hero-actions
+        a.btn.btn-primary(href="/comprobantes") Ver comprobantes
+        a.btn.btn-success(href="/comprobantes/crear") + Nuevo
+    article.feature-card
+      span.eyebrow Cobros
+      h3 Pagos
+      p Registrá los pagos recibidos de tus clientes y mantené actualizada la cuenta corriente.
+      .hero-actions
+        a.btn.btn-primary(href="/pagos") Ver pagos
+        a.btn.btn-success(href="/pagos/crear") + Nuevo
+
+  .top-bar(style="margin-top: 0.5rem")
+    a.btn(href="/inicio") ← Volver al inicio

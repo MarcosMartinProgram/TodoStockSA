@@ -1,0 +1,54 @@
+extends ../layout
+
+block content
+  .detail-header
+    div
+      h2 #{comprobante.tipo.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} Nro. #{comprobante.numero}
+      p.muted Receptor: #{comprobante.clienteId ? comprobante.clienteId.nombre : (comprobante.receptorNombre || 'Consumidor Final')}
+    .actions
+      a.btn.btn-warning(href=`/comprobantes/${comprobante.id}/editar`) Editar
+      form.inline(action=`/comprobantes/${comprobante.id}?_method=DELETE` method="POST")
+        button.btn.btn-danger(type="submit" onclick="return confirm('¿Eliminar este comprobante?')") Eliminar
+
+  .data-panel
+    .detail-grid
+      .detail-item
+        span.label Tipo
+        span.value #{comprobante.tipo.replace(/_/g, ' ')}
+      .detail-item
+        span.label Número
+        span.value #{comprobante.numero}
+      .detail-item
+        span.label Fecha
+        span.value #{new Date(comprobante.fecha).toLocaleDateString('es-AR')}
+      .detail-item
+        span.label Importe
+        span.value $#{comprobante.importe.toFixed(2)}
+      if comprobante.descripcion
+        .detail-item
+          span.label Descripción
+          span.value #{comprobante.descripcion}
+
+  if comprobante.items && comprobante.items.length > 0
+    .data-panel(style="margin-top:1rem")
+      h3(style="margin-bottom:0.75rem") Detalle de venta
+      .table-wrap
+        table
+          thead
+            tr
+              th Producto
+              th Cantidad
+              th Precio Unitario
+              th Subtotal
+          tbody
+            each item in comprobante.items
+              tr
+                td #{item.productoNombre}
+                td #{item.cantidad}
+                td $#{Number(item.precioUnitario).toFixed(2)}
+                td $#{Number(item.subtotal).toFixed(2)}
+
+  .top-bar(style="margin-top:1rem")
+    if comprobante.clienteId
+      a.btn.btn-primary(href=`/cuenta/${comprobante.clienteId.id}`) Ver Cuenta Corriente del Cliente
+    a.btn(href="/comprobantes") Volver al listado

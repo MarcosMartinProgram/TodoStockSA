@@ -2,9 +2,24 @@
 // Middlewares de validación para verificar datos obligatorios
 // en las peticiones antes de llegar al controlador.
 
+const mongoose = require('mongoose');
+
 /**
- * Valida que los campos obligatorios de un producto estén presentes.
- * Campos requeridos: nombre, precio, stock, proveedorId.
+ * Valida que el parámetro :id sea un ObjectId válido de MongoDB.
+ * CORREGIDO: antes validaba como número entero (era para persistencia JSON).
+ */
+function validateId(req, res, next) {
+  if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    return res.status(400).json({
+      error: 'El ID proporcionado no es válido.'
+    });
+  }
+  next();
+}
+
+/**
+ * Valida campos obligatorios de un producto.
+ * CORREGIDO: proveedorId ahora se valida como ObjectId (no como número).
  */
 function validateProduct(req, res, next) {
   const { nombre, precio, stock, proveedorId } = req.body;
@@ -13,26 +28,24 @@ function validateProduct(req, res, next) {
   if (!nombre || typeof nombre !== 'string' || nombre.trim() === '') {
     errors.push('El campo "nombre" es obligatorio y debe ser un texto.');
   }
-  if (precio === undefined || precio === null || typeof precio !== 'number' || precio < 0) {
+  if (precio === undefined || precio === null || isNaN(Number(precio)) || Number(precio) < 0) {
     errors.push('El campo "precio" es obligatorio y debe ser un número positivo.');
   }
-  if (stock === undefined || stock === null || typeof stock !== 'number' || stock < 0) {
+  if (stock === undefined || stock === null || isNaN(Number(stock)) || Number(stock) < 0) {
     errors.push('El campo "stock" es obligatorio y debe ser un número positivo.');
   }
-  if (!proveedorId || typeof proveedorId !== 'number') {
-    errors.push('El campo "proveedorId" es obligatorio y debe ser un número.');
+  if (!proveedorId || !mongoose.Types.ObjectId.isValid(proveedorId)) {
+    errors.push('El campo "proveedorId" es obligatorio y debe ser un ID válido.');
   }
 
   if (errors.length > 0) {
     return res.status(400).json({ error: 'Datos inválidos', detalles: errors });
   }
-
   next();
 }
 
 /**
- * Valida que los campos obligatorios de un proveedor estén presentes.
- * Campos requeridos: nombre, contacto, telefono, email.
+ * Valida campos obligatorios de un proveedor.
  */
 function validateProvider(req, res, next) {
   const { nombre, contacto, telefono, email } = req.body;
@@ -54,23 +67,116 @@ function validateProvider(req, res, next) {
   if (errors.length > 0) {
     return res.status(400).json({ error: 'Datos inválidos', detalles: errors });
   }
-
   next();
 }
 
 /**
- * Valida que el parámetro :id sea un número entero válido.
+ * Valida campos obligatorios de un cliente.
  */
-function validateId(req, res, next) {
-  const id = Number(req.params.id);
+function validateClient(req, res, next) {
+  const { nombre, cuit, email } = req.body;
+  const errors = [];
 
-  if (isNaN(id) || !Number.isInteger(id) || id <= 0) {
-    return res.status(400).json({ error: 'El ID proporcionado no es válido. Debe ser un número entero positivo.' });
+  if (!nombre || typeof nombre !== 'string' || nombre.trim() === '') {
+    errors.push('El campo "nombre" es obligatorio y debe ser un texto.');
+  }
+  if (!cuit || typeof cuit !== 'string' || cuit.trim() === '') {
+    errors.push('El campo "cuit" es obligatorio.');
+  }
+  if (!email || typeof email !== 'string' || email.trim() === '') {
+    errors.push('El campo "email" es obligatorio.');
   }
 
-  // Convierte a número para uso posterior en controladores
-  req.params.id = id;
+  if (errors.length > 0) {
+    return res.status(400).json({ error: 'Datos inválidos', detalles: errors });
+  }
   next();
 }
 
-module.exports = { validateProduct, validateProvider, validateId };
+/**
+ * Valida campos obligatorios de un comprobante.
+ */
+function validateVoucher(req, res, next) {
+  const {
+    clienteId,
+    receptorTipo,
+    tipo,
+    numero,
+    fecha,
+    importe,
+    productoId,
+    cantidad
+  } = req.body;
+  const errors = [];
+
+  const tipoReceptor = receptorTipo || 'cliente';
+
+  if (!['cliente', 'consumidor_final'].includes(tipoReceptor)) {
+    errors.push('El campo "receptorTipo" debe ser cliente o consumidor_final.');
+  }
+
+  if (tipoReceptor === 'cliente' && (!clienteId || !mongoose.Types.ObjectId.isValid(clienteId))) {
+    errors.push('El campo "clienteId" es obligatorio y debe ser un ID válido.');
+  }
+
+  const tiposValidos = ['factura', 'nota_credito', 'nota_debito'];
+  if (!tipo || !tiposValidos.includes(tipo)) {
+    errors.push('El campo "tipo" debe ser: factura, nota_credito o nota_debito.');
+  }
+  if (!numero || typeof numero !== 'string' || numero.trim() === '') {
+    errors.push('El campo "numero" es obligatorio.');
+  }
+  if (!fecha) {
+    errors.push('El campo "fecha" es obligatorio.');
+  }
+  const productoIds = Array.isArray(productoId) ? productoId : [productoId];
+  const cantidades = Array.isArray(cantidad) ? cantidad : [cantidad];
+  const hasItems = productoIds.some((id, index) => {
+    const qty = Number(cantidades[index]);
+    return id && mongoose.Types.ObjectId.isValid(id) && Number.isFinite(qty) && qty > 0;
+  });
+
+  if (!hasItems && (importe === undefined || importe === null || isNaN(Number(importe)) || Number(importe) <= 0)) {
+    errors.push('El campo "importe" es obligatorio y debe ser mayor a 0.');
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({ error: 'Datos inválidos', detalles: errors });
+  }
+  next();
+}
+
+/**
+ * Valida campos obligatorios de un pago.
+ */
+function validatePayment(req, res, next) {
+  const { clienteId, fecha, importe, medioPago } = req.body;
+  const errors = [];
+
+  if (!clienteId || !mongoose.Types.ObjectId.isValid(clienteId)) {
+    errors.push('El campo "clienteId" es obligatorio y debe ser un ID válido.');
+  }
+  if (!fecha) {
+    errors.push('El campo "fecha" es obligatorio.');
+  }
+  if (importe === undefined || importe === null || isNaN(Number(importe)) || Number(importe) <= 0) {
+    errors.push('El campo "importe" es obligatorio y debe ser mayor a 0.');
+  }
+  if (!medioPago || typeof medioPago !== 'string' || medioPago.trim() === '') {
+    errors.push('El campo "medioPago" es obligatorio.');
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({ error: 'Datos inválidos', detalles: errors });
+  }
+  next();
+}
+
+module.exports = {
+  validateId,
+  validateProduct,
+  validateProvider,
+  validateClient,
+  validateVoucher,
+  validatePayment
+};

@@ -1,0 +1,31 @@
+extends ../layout
+
+block content
+  .form-container
+    h2 Editar Cliente
+    form(action=`/clientes/${cliente.id}?_method=PUT` method="POST")
+      .form-group
+        label(for="nombre") Nombre / Razón Social *
+        input#nombre(type="text" name="nombre" required value=cliente.nombre)
+      .form-group
+        label(for="cuit") CUIT *
+        input#cuit(type="text" name="cuit" required value=cliente.cuit)
+      .form-group
+        label(for="email") Email *
+        input#email(type="email" name="email" required value=cliente.email)
+      .form-group
+        label(for="telefono") Teléfono
+        input#telefono(type="text" name="telefono" value=cliente.telefono)
+      .form-group
+        label(for="direccion") Dirección
+        input#direccion(type="text" name="direccion" value=cliente.direccion)
+      .form-group
+        label(for="condicionIva") Condición IVA
+        select#condicionIva(name="condicionIva")
+          option(value="consumidor_final" selected=(cliente.condicionIva === 'consumidor_final')) Consumidor Final
+          option(value="responsable_inscripto" selected=(cliente.condicionIva === 'responsable_inscripto')) Responsable Inscripto
+          option(value="monotributista" selected=(cliente.condicionIva === 'monotributista')) Monotributista
+          option(value="exento" selected=(cliente.condicionIva === 'exento')) Exento
+      .form-actions
+        button.btn.btn-success(type="submit") Guardar Cambios
+        a.btn(href=`/clientes/${cliente.id}`) Cancelar

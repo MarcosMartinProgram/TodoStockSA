@@ -1,0 +1,49 @@
+extends ../layout
+
+block content
+  section.section-banner
+    .section-copy
+      span.eyebrow Facturación
+      h2 Comprobantes de venta
+      p.
+        Registre facturas, notas de crédito y notas de débito. Cada comprobante actualiza automáticamente la cuenta corriente del cliente.
+      .kpi-row
+        span.chip Facturas
+        span.chip Notas de Crédito
+        span.chip Notas de Débito
+    .section-media(style="background-image: url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80');")
+
+  .top-bar
+    p.muted Historial de comprobantes emitidos.
+    a.btn.btn-success(href="/comprobantes/crear") + Nuevo Comprobante
+
+  if comprobantes.length === 0
+    .alert.alert-danger No hay comprobantes registrados.
+  else
+    .data-panel
+      .table-wrap
+        table
+          thead
+            tr
+              th Fecha
+              th Tipo
+              th Número
+              th Cliente
+              th Importe
+              th Acciones
+          tbody
+            each comp in comprobantes
+              tr
+                td #{new Date(comp.fecha).toLocaleDateString('es-AR')}
+                td
+                  span(class=`chip chip-${comp.tipo === 'factura' ? 'success' : comp.tipo === 'nota_debito' ? 'warning' : 'info'}`)
+                    | #{comp.tipo.replace(/_/g, ' ')}
+                td #{comp.numero}
+                td #{comp.clienteId ? comp.clienteId.nombre : (comp.receptorNombre || 'Consumidor Final')}
+                td $#{comp.importe.toFixed(2)}
+                td
+                  .actions
+                    a.btn.btn-primary(href=`/comprobantes/${comp.id}`) Ver
+                    a.btn.btn-warning(href=`/comprobantes/${comp.id}/editar`) Editar
+                    form.inline(action=`/comprobantes/${comp.id}?_method=DELETE` method="POST")
+                      button.btn.btn-danger(type="submit" onclick="return confirm('¿Eliminar este comprobante?')") Eliminar
