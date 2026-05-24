@@ -249,6 +249,13 @@ URL local por defecto:
 http://localhost:3000
 ```
 
+## Acceso de prueba
+
+Para ingresar al login en entorno de prueba:
+
+- Usuario: admin
+- Clave: admin123
+
 ---
 
 ## Notas de Version
