@@ -293,4 +293,9 @@ Proyecto academico para la Tecnicatura en Desarrollo de Software.
 
 ## Licencia
 
-ISC
+M
+Empresa de Desarrollo LUMINA CODE ( grupo 18 )
+Brandemann, Agustina
+Martin, Marcos
+Natucci, Valeria
+Specterman, Luis
