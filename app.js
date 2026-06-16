@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const express = require('express');
 const path    = require('path');
+const fs      = require('fs');
 
 const connectDB = require('./src/config/db');
 
@@ -26,7 +27,15 @@ const PORT = process.env.PORT || 3000;
 
 // --- Configuración del motor de plantillas ---
 app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, 'src', 'views'));
+
+const viewsPathCandidates = [
+  path.join(__dirname, 'src', 'views'),
+  path.join(process.cwd(), 'src', 'views')
+];
+const resolvedViewsPath = viewsPathCandidates.find((candidate) => fs.existsSync(candidate))
+  || viewsPathCandidates[0];
+
+app.set('views', resolvedViewsPath);
 
 // --- Middlewares globales ---
 app.use(express.json());
@@ -55,6 +64,9 @@ app.use('/login', loginRoutes);
 
 // --- Ruta principal --- redirige al login como entrada al sistema ---
 app.get('/', (req, res) => res.redirect('/login'));
+
+// Evita errores por solicitud automática de favicon cuando no hay archivo estático.
+app.get('/favicon.ico', (_req, res) => res.status(204).end());
 
 // --- Menú principal (post-login) ---
 app.get('/inicio', (req, res) => {
