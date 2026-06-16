@@ -1,6 +1,6 @@
 // src/routes/accountRoutes.js
 const { Router }   = require('express');
-const CcorrienteClienteController = require('../controllers/CcorrienteClienteController');
+const CcorrienteClienteController = require('../controllers/CCorrienteClienteController');
 const mongoose     = require('mongoose');
 
 const router     = Router();
