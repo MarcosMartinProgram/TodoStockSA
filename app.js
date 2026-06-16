@@ -82,12 +82,18 @@ app.use((req, res) => {
 // --- Middleware global de errores ---
 app.use(errorHandler);
 
-// --- Inicio del servidor ---
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`[TodoStock S.A.] Servidor corriendo en http://localhost:${PORT}`);
-    console.log(`[TodoStock S.A.] Entorno: ${process.env.NODE_ENV || 'development'}`);
+// --- Inicio del servidor (solo local) / inicializacion DB (serverless) ---
+if (require.main === module) {
+  connectDB().then(() => {
+    app.listen(PORT, () => {
+      console.log(`[TodoStock S.A.] Servidor corriendo en http://localhost:${PORT}`);
+      console.log(`[TodoStock S.A.] Entorno: ${process.env.NODE_ENV || 'development'}`);
+    });
   });
-});
+} else {
+  connectDB().catch((error) => {
+    console.error('Error al inicializar MongoDB en entorno serverless:', error.message);
+  });
+}
 
 module.exports = app;
