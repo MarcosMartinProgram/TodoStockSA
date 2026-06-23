@@ -1,7 +1,8 @@
 require('dotenv').config();
 
-const dns = require('dns');
-dns.setServers(['8.8.8.8']);
+// solo uso de Luis x problemas con node
+/* const dns = require('dns');
+dns.setServers(['8.8.8.8']); */
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
