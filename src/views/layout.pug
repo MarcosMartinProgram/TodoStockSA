@@ -420,16 +420,43 @@ html(lang="es")
           grid-template-columns: 1fr;
           gap: 6px;
         }
+
+        .user-info {
+          text-align: center;
+          padding: 8px 14px;
+          border-radius: 12px;
+          background: rgba(13, 148, 136, 0.08);
+          border: 1px solid rgba(13, 148, 136, 0.15);
+          font-size: 0.9rem;
+        }
+
+        .user-info strong {
+          display: block;
+          color: var(--ink);
+        }
+
+        .user-info span {
+          color: var(--brand);
+          font-weight: 800;
+        }
+
       }
 
   body
     header.site-header
       .container
         a.brand-mark(href="/inicio")
-          span.brand-icon TS
-          span.brand-copy
-            small Distribuidora mayorista
-            strong TodoStock S.A.
+        span.brand-icon TS
+        span.brand-copy
+          small Distribuidora mayorista
+          strong TodoStock S.A.
+
+        if usuario
+          .user-info
+          strong #{usuario.usuario}
+          br
+          span #{usuario.rol}            
+
         nav
           a(href="/inicio") Inicio
           a(href="/productos") Productos

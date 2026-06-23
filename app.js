@@ -43,6 +43,35 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
+app.use((req, res, next) => {
+
+  const token = req.cookies?.token;
+
+  if (!token) {
+    res.locals.usuario = null;
+    return next();
+  }
+
+  try {
+
+    const payload = require('jsonwebtoken').verify(
+      token,
+      process.env.JWT_SECRET
+    );
+
+    res.locals.usuario = payload;
+
+  } catch (error) {
+
+    res.locals.usuario = null;
+
+  }
+
+  next();
+
+});
+
+
 // Method Override: permite usar PUT y DELETE desde formularios HTML
 app.use((req, res, next) => {
   if (req.query._method) {
@@ -163,6 +192,9 @@ app.use((req, res) => {
     message: 'La página solicitada no fue encontrada.'
   });
 });
+
+
+
 
 // --- Middleware global de errores ---
 app.use(errorHandler);

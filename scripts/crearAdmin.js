@@ -12,7 +12,7 @@ async function crearAdmin() {
 
   try {
 
-    await mongoose.connect(process.env.MONGODB_URI);
+    await mongoose.connect(process.env.MONGODB_ATLAS_URI);
 
     const existe = await User.findOne({
       usuario: 'admin'
