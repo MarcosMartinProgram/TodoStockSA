@@ -12,15 +12,15 @@ function roleMiddleware(...rolesPermitidos) {
 
     }
 
-    if (!rolesPermitidos.includes(req.usuario.rol)) {
+if (!rolesPermitidos.includes(req.usuario.rol)) {
 
-      return res.status(403).render('error', {
-        title: 'Acceso denegado',
-        statusCode: 403,
-        message: 'No tiene permisos para acceder a esta sección.'
-      });
+  return res.status(403).render('error', {
+    title: 'Acceso denegado',
+    statusCode: 403,
+    message: `Su perfil ${req.usuario.rol} no posee permisos para acceder a esta sección.`
+  });
 
-    }
+}
 
     next();
 
