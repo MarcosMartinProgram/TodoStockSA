@@ -1,0 +1,87 @@
+extends ../layout
+
+block content
+
+  .form-container
+
+    h2 Editar Usuario
+
+    form(action=`/usuarios/${usuario._id}?_method=PUT` method="POST")
+
+      .form-group
+        label(for="usuario") Usuario *
+
+        input#usuario(
+          type="text"
+          name="usuario"
+          required
+          value=usuario.usuario
+        )
+
+      .form-group
+        label(for="nombre") Nombre *
+
+        input#nombre(
+          type="text"
+          name="nombre"
+          required
+          value=usuario.nombre
+        )
+
+      .form-group
+        label(for="password")
+          | Nueva contraseña
+
+        input#password(
+          type="password"
+          name="password"
+          placeholder="Dejar vacío para mantener la actual"
+        )
+
+      .form-group
+        label(for="rol") Rol
+
+        select#rol(name="rol")
+
+          option(
+            value="ADMIN"
+            selected=usuario.rol === 'ADMIN'
+          ) ADMIN
+
+          option(
+            value="VENTAS"
+            selected=usuario.rol === 'VENTAS'
+          ) VENTAS
+
+          option(
+            value="COMPRAS"
+            selected=usuario.rol === 'COMPRAS'
+          ) COMPRAS
+
+      .form-group
+
+        label(for="activo") Estado
+
+        select#activo(name="activo")
+
+          option(
+            value="true"
+            selected=usuario.activo
+          ) Activo
+
+          option(
+            value="false"
+            selected=!usuario.activo
+          ) Inactivo
+
+      .form-actions
+
+        button.btn.btn-success(
+          type="submit"
+        )
+          Guardar Cambios
+
+        a.btn(
+          href="/usuarios"
+        )
+          Cancelar

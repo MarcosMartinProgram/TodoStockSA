@@ -1,0 +1,72 @@
+extends ../layout
+
+block content
+
+  section.section-banner
+    .section-copy
+      span.eyebrow Seguridad
+      h2 Usuarios del sistema
+      p Administración de usuarios y roles.
+      .kpi-row
+        span.chip ADMIN
+        span.chip VENTAS
+        span.chip COMPRAS
+
+  .top-bar
+    p.muted Usuarios registrados en el sistema.
+
+    a.btn.btn-success(href="/usuarios/crear")
+      | + Nuevo Usuario
+
+  if usuarios.length === 0
+
+    .alert.alert-danger
+      | No hay usuarios registrados.
+
+  else
+
+    .data-panel
+
+      .table-wrap
+
+        table
+
+          thead
+            tr
+              th Usuario
+              th Nombre
+              th Rol
+              th Activo
+              th Acciones
+
+          tbody
+
+            each usuario in usuarios
+
+              tr
+
+                td #{usuario.usuario}
+
+                td #{usuario.nombre}
+
+                td #{usuario.rol}
+
+                td #{usuario.activo ? 'Sí' : 'No'}
+
+                td
+
+                  .actions
+
+                    a.btn.btn-warning(
+                      href=`/usuarios/${usuario._id}/editar`
+                    ) Editar
+
+                    form.inline(
+                      action=`/usuarios/${usuario._id}?_method=DELETE`
+                      method="POST"
+                    )
+
+                      button.btn.btn-danger(
+                        type="submit"
+                        onclick="return confirm('¿Desea desactivar este usuario?')"
+                      ) Desactivar
