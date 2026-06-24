@@ -13,11 +13,18 @@ function errorHandler(err, req, res, _next) {
     return res.status(statusCode).json({ error: message });
   }
 
-  res.status(statusCode).render('error', {
-    title: `Error ${statusCode}`,
-    statusCode,
-    message
-  });
+  try {
+    res.status(statusCode).render('error', {
+      title: `Error ${statusCode}`,
+      statusCode,
+      message
+    });
+  } catch (_renderErr) {
+    // Fallback si el motor de vistas no está disponible
+    res.status(statusCode).send(
+      `<!DOCTYPE html><html><body><h1>Error ${statusCode}</h1><p>${message}</p></body></html>`
+    );
+  }
 }
 
 module.exports = errorHandler;
