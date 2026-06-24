@@ -38,6 +38,16 @@ app.set('views', path.join(__dirname, 'src', 'views'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Garantiza conexión a MongoDB en cada invocación (necesario en Vercel/serverless)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
 app.use(cookieParser());
 
 app.use((req, res, next) => {
@@ -174,12 +184,14 @@ app.use((req, res) => {
 // --- Middleware global de errores ---
 app.use(errorHandler);
 
-// --- Inicio del servidor ---
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`[TodoStock S.A.] Servidor corriendo en http://localhost:${PORT}`);
-    console.log(`[TodoStock S.A.] Entorno: ${process.env.NODE_ENV || 'development'}`);
+// --- Inicio del servidor (solo en local, no en Vercel) ---
+if (!process.env.VERCEL) {
+  connectDB().then(() => {
+    app.listen(PORT, () => {
+      console.log(`[TodoStock S.A.] Servidor corriendo en http://localhost:${PORT}`);
+      console.log(`[TodoStock S.A.] Entorno: ${process.env.NODE_ENV || 'development'}`);
+    });
   });
-});
+}
 
 module.exports = app;
