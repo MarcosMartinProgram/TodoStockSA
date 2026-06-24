@@ -1,0 +1,55 @@
+extends ../layout
+
+block content
+
+  .form-container
+
+    h2 Nuevo Usuario
+
+    form(action="/usuarios" method="POST")
+
+      .form-group
+        label(for="usuario") Usuario *
+
+        input#usuario(
+          type="text"
+          name="usuario"
+          required
+        )
+
+      .form-group
+        label(for="nombre") Nombre *
+
+        input#nombre(
+          type="text"
+          name="nombre"
+          required
+        )
+
+      .form-group
+        label(for="password") Contraseña *
+
+        input#password(
+          type="password"
+          name="password"
+          required
+        )
+
+      .form-group
+        label(for="rol") Rol
+        select#rol(name="rol")
+          option(value="ADMIN") ADMIN
+          option(value="VENTAS") VENTAS
+          option(value="COMPRAS") COMPRAS
+
+      .form-actions
+
+        button.btn.btn-success(
+          type="submit"
+        )
+          Guardar Usuario
+
+        a.btn(
+          href="/usuarios"
+        )
+          Cancelar

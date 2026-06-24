@@ -6,6 +6,7 @@ require('dotenv').config();
 const express = require('express');
 const path    = require('path');
 
+const cookieParser = require('cookie-parser');
 const connectDB = require('./src/config/db');
 
 // Importar rutas
@@ -18,8 +19,13 @@ const voucherRoutes  = require('./src/routes/comprobanteClienteRoutes');
 const paymentRoutes  = require('./src/routes/pagosClienteRoutes');
 const accountRoutes  = require('./src/routes/ccorrienteClienteRoutes');
 
+const userRoutes     = require('./src/routes/userRoutes');
+
 // Importar middleware de errores
 const errorHandler = require('./src/middlewares/errorHandler');
+
+const authMiddleware = require('./src/middlewares/authMiddleware');
+const roleMiddleware = require('./src/middlewares/roleMiddleware');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
@@ -31,6 +37,37 @@ app.set('views', path.join(__dirname, 'src', 'views'));
 // --- Middlewares globales ---
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cookieParser());
+
+app.use((req, res, next) => {
+
+  const token = req.cookies?.token;
+
+  if (!token) {
+    res.locals.usuario = null;
+    return next();
+  }
+
+  try {
+
+    const payload = require('jsonwebtoken').verify(
+      token,
+      process.env.JWT_SECRET
+    );
+
+    res.locals.usuario = payload;
+
+  } catch (error) {
+
+    res.locals.usuario = null;
+
+  }
+
+  next();
+
+});
+
 
 // Method Override: permite usar PUT y DELETE desde formularios HTML
 app.use((req, res, next) => {
@@ -57,18 +94,70 @@ app.use('/login', loginRoutes);
 app.get('/', (req, res) => res.redirect('/login'));
 
 // --- Menú principal (post-login) ---
-app.get('/inicio', (req, res) => {
-  res.render('index', { title: 'Inicio' });
-});
+app.get(
+  '/inicio',
+  authMiddleware,
+  (req, res) => {
+    res.render('index', { title: 'Inicio' });
+  }
+);
 
 // --- Montaje de rutas de módulos ---
-app.use('/ventas',       ventasRoutes);
-app.use('/productos',    productRoutes);
-app.use('/proveedores',  providerRoutes);
-app.use('/clientes',     clientRoutes);
-app.use('/comprobantes', voucherRoutes);
-app.use('/pagos',        paymentRoutes);
-app.use('/cuenta',       accountRoutes);
+app.use(
+  '/productos',
+  authMiddleware,
+  roleMiddleware('ADMIN', 'COMPRAS'),
+  productRoutes
+);
+
+app.use(
+  '/proveedores',
+  authMiddleware,
+  roleMiddleware('ADMIN', 'COMPRAS'),
+  providerRoutes
+);
+
+app.use(
+  '/clientes',
+  authMiddleware,
+  roleMiddleware('ADMIN', 'VENTAS'),
+  clientRoutes
+);
+
+app.use(
+  '/ventas',
+  authMiddleware,
+  roleMiddleware('ADMIN', 'VENTAS'),
+  ventasRoutes
+);
+
+app.use(
+  '/comprobantes',
+  authMiddleware,
+  roleMiddleware('ADMIN', 'VENTAS'),
+  voucherRoutes
+);
+
+app.use(
+  '/pagos',
+  authMiddleware,
+  roleMiddleware('ADMIN', 'VENTAS'),
+  paymentRoutes
+);
+
+app.use(
+  '/cuenta',
+  authMiddleware,
+  roleMiddleware('ADMIN', 'VENTAS'),
+  accountRoutes
+);
+
+app.use(
+  '/usuarios',
+  authMiddleware,
+  roleMiddleware('ADMIN'),
+  userRoutes
+);
 
 // --- Manejo de rutas no encontradas (404) ---
 app.use((req, res) => {
@@ -78,6 +167,9 @@ app.use((req, res) => {
     message: 'La página solicitada no fue encontrada.'
   });
 });
+
+
+
 
 // --- Middleware global de errores ---
 app.use(errorHandler);
